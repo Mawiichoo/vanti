@@ -1565,3 +1565,131 @@ input:checked + .toggle-slider:before {
         box-shadow: 0 0 20px rgba(2, 132, 199, 0.15);
     }
 }
+
+/* EVM & S-Curve Layout Custom Styles */
+.evm-summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+@media (max-width: 950px) {
+    .evm-summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.evm-left-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.evm-metrics-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.6rem;
+}
+
+.evm-card-item {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    padding: 0.6rem 0.4rem;
+    text-align: center;
+    transition: background-color var(--transition-speed);
+}
+
+.evm-card-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.evm-card-title {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.evm-card-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-top: 0.1rem;
+    font-family: 'Outfit', sans-serif;
+}
+
+.evm-card-value.cpi-good, .evm-card-value.spi-good {
+    color: var(--color-success);
+}
+.evm-card-value.cpi-alert, .evm-card-value.spi-alert {
+    color: var(--vanti-yellow);
+}
+.evm-card-value.cpi-bad, .evm-card-value.spi-bad {
+    color: var(--color-danger);
+}
+
+/* EVM Radar Table styling */
+.evm-table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.evm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    text-align: left;
+}
+
+.evm-table th {
+    padding: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    border-bottom: 1px solid var(--glass-border);
+    letter-spacing: 0.5px;
+}
+
+.evm-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    vertical-align: middle;
+}
+
+.evm-table tr:last-child td {
+    border-bottom: none;
+}
+
+.evm-table tbody tr:hover {
+    background: rgba(2, 132, 199, 0.03);
+}
+
+.health-badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.health-badge.success {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--color-success);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.health-badge.warning {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--color-warning);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.health-badge.danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--color-danger);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}

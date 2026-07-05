@@ -187,28 +187,88 @@
                             </div>
                         </div>
                     </section>
-
-                    <!-- Bottom Right: Cost control -->
+                    <!-- Bottom Right: Cost control (Enhanced EVM & S-Curve) -->
                     <section class="panel cost-panel">
                         <div class="panel-header">
-                            <h2 class="panel-title">4.3 Control Tridimensional de Costos</h2>
+                            <h2 class="panel-title">4.3 Control Tridimensional de Costos (EVM &amp; Curva-S)</h2>
                         </div>
                         <div class="panel-content">
-                            <div class="cost-summary-container">
-                                <div class="cost-chart-wrapper">
-                                    <div class="gauge-container">
-                                        <!-- Interactive SVG Gauge -->
-                                        <svg class="gauge" viewBox="0 0 100 50">
-                                            <path class="gauge-bg" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke-width="8"/>
-                                            <path class="gauge-fill" id="cost-gauge-fill" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke-width="8" stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
-                                        </svg>
-                                        <div class="gauge-val" id="cost-gauge-value">0%</div>
+                            <div class="evm-summary-grid">
+                                <!-- Left: EVM circular gauge and values -->
+                                <div class="evm-left-col">
+                                    <div style="display:flex; align-items:center; gap:1.5rem; margin-bottom:1rem;">
+                                        <div class="gauge-container" style="width: 100px; height: 50px;">
+                                            <svg class="gauge" viewBox="0 0 100 50">
+                                                <path class="gauge-bg" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke-width="8"/>
+                                                <path class="gauge-fill" id="cost-gauge-fill" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke-width="8" stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+                                            </svg>
+                                            <div class="gauge-val" id="cost-gauge-value" style="font-size:0.95rem;">0%</div>
+                                        </div>
+                                        <div>
+                                            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:600; display:block;">Ejecución de Presupuesto</span>
+                                            <span id="evm-budget-status-text" style="font-size:0.85rem; font-weight:600;">Calculando...</span>
+                                        </div>
                                     </div>
-                                    <div class="gauge-title">Ejecución del Presupuesto</div>
+                                    <div class="evm-metrics-cards">
+                                        <div class="evm-card-item">
+                                            <div class="evm-card-title" title="Presupuesto Planificado">Planificado (PV)</div>
+                                            <div class="evm-card-value" id="evm-val-pv">$0.0M</div>
+                                        </div>
+                                        <div class="evm-card-item">
+                                            <div class="evm-card-title" title="Trabajo Real Completado expresado en presupuesto">Ganado (EV)</div>
+                                            <div class="evm-card-value" id="evm-val-ev">$0.0M</div>
+                                        </div>
+                                        <div class="evm-card-item">
+                                            <div class="evm-card-title" title="Presupuesto Real Gastado">Ejecutado (AC)</div>
+                                            <div class="evm-card-value" id="evm-val-ac">$0.0M</div>
+                                        </div>
+                                    </div>
+                                    <div class="evm-metrics-cards" style="margin-top:0.5rem;">
+                                        <div class="evm-card-item">
+                                            <div class="evm-card-title" title="Índice de Desempeño de Costo (EV / AC)">IPC (CPI)</div>
+                                            <div class="evm-card-value" id="evm-val-cpi">1.00</div>
+                                        </div>
+                                        <div class="evm-card-item">
+                                            <div class="evm-card-title" title="Índice de Desempeño de Cronograma (EV / PV)">IPT (SPI)</div>
+                                            <div class="evm-card-value" id="evm-val-spi">1.00</div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="cost-list" id="cost-breakdown-list">
-                                    <!-- Dynamic rows representing each project's planned vs actual cost -->
+                                <!-- Right: S-Curve Chart (EVM Timeline S-Curve) -->
+                                <div class="evm-right-col">
+                                    <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:600; margin-bottom:5px; text-align:center;">Curva-S del Proyecto (Acumulado PV vs EV vs AC)</div>
+                                    <div style="position: relative; height: 160px; width: 100%;">
+                                        <canvas id="sCurveChart"></canvas>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- New Panel: 4.4 Radar de Salud Integrado (EVM Table) -->
+                    <section class="panel health-radar-panel">
+                        <div class="panel-header">
+                            <h2 class="panel-title">4.4 Radar de Salud y Valor Ganado Integrado (EVM)</h2>
+                            <span style="font-size:0.75rem; color:var(--text-muted);">Dimensión 4.1 (Avance) + 4.2 (Tiempo) + 4.3 (Costo)</span>
+                        </div>
+                        <div class="panel-content">
+                            <div class="evm-table-wrapper">
+                                <table class="evm-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Frente de Proyecto</th>
+                                            <th>4.1 Avance Físico</th>
+                                            <th>4.2 Desviación Tiempo</th>
+                                            <th>4.3 Costo R / P</th>
+                                            <th>IPC (CPI)</th>
+                                            <th>IPT (SPI)</th>
+                                            <th>Estado Tridimensional de Salud</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="evm-radar-tbody">
+                                        <!-- Dynamically generated rows -->
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </section>

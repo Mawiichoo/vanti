@@ -975,6 +975,7 @@ function runCalculationsAndRender() {
     
     populateProjectSelect();
     updateBurndownChart();
+    updateSCurveChart();
 }
 
 function propagateCalendarTimelines(husList) {
@@ -1303,53 +1304,291 @@ function renderTimelineGantt(projects) {
 }
 
 // 4.3 Render Cost Control
+// 4.3 Render Cost Control (Enhanced EVM and Health Radar)
 function renderCostControl(projects, totalPlanned, costPercent) {
+    // 1. Calculate Portfolio EVM
+    let portfolioPV = 0;
+    let portfolioEV = 0;
+    let portfolioAC = 0;
+
+    activeHUs.forEach(hu => {
+        portfolioPV += hu.plannedCost;
+        portfolioEV += (hu.progress / 100) * hu.plannedCost;
+        portfolioAC += hu.actualCost;
+    });
+
+    const portfolioCPI = portfolioAC > 0 ? (portfolioEV / portfolioAC) : 1.0;
+    const portfolioSPI = portfolioPV > 0 ? (portfolioEV / portfolioPV) : 1.0;
+
+    // 2. Render Gauge
     const gaugeFill = document.getElementById("cost-gauge-fill");
     const gaugeVal = document.getElementById("cost-gauge-value");
-    
     const strokeDash = 125.6;
-    const executionRate = Math.min(1.5, costPercent / 100);
+    
+    // Budget execution is AC / PV
+    const executionPercent = portfolioPV > 0 ? Math.round((portfolioAC / portfolioPV) * 100) : 0;
+    const executionRate = Math.min(1.5, executionPercent / 100);
     const offset = strokeDash - (executionRate * strokeDash / 2);
 
-    gaugeFill.style.strokeDashoffset = offset;
-    gaugeVal.textContent = `${costPercent}%`;
-    
-    if (costPercent > 105) {
-        gaugeFill.style.stroke = "var(--color-danger)";
-        gaugeVal.style.color = "var(--color-danger)";
-    } else if (costPercent < 95) {
-        gaugeFill.style.stroke = "var(--color-success)";
-        gaugeVal.style.color = "var(--color-success)";
-    } else {
-        gaugeFill.style.stroke = "var(--vanti-yellow)";
-        gaugeVal.style.color = "var(--text-main)";
+    if (gaugeFill && gaugeVal) {
+        gaugeFill.style.strokeDashoffset = offset;
+        gaugeVal.textContent = `${executionPercent}%`;
+        
+        if (executionPercent > 105) {
+            gaugeFill.style.stroke = "var(--color-danger)";
+            gaugeVal.style.color = "var(--color-danger)";
+        } else if (executionPercent < 95) {
+            gaugeFill.style.stroke = "var(--color-success)";
+            gaugeVal.style.color = "var(--color-success)";
+        } else {
+            gaugeFill.style.stroke = "var(--vanti-yellow)";
+            gaugeVal.style.color = "var(--text-main)";
+        }
     }
 
-    const list = document.getElementById("cost-breakdown-list");
-    list.innerHTML = "";
-
-    projects.forEach(proj => {
-        const row = document.createElement("div");
-        row.className = "cost-row";
-        
-        const deviation = proj.actualCost - proj.plannedCost;
-        let devClass = "";
-        let devText = `$${proj.actualCost.toFixed(1)}M`;
-        
-        if (deviation > 0.5) {
-            devClass = "cost-overrun";
-            devText += ` (+${deviation.toFixed(1)})`;
-        } else if (deviation < -0.5) {
-            devClass = "cost-underrun";
-            devText += ` (-${Math.abs(deviation).toFixed(1)})`;
+    // Budget Status Text
+    const statusTextEl = document.getElementById("evm-budget-status-text");
+    if (statusTextEl) {
+        if (executionPercent > 105) {
+            statusTextEl.textContent = `Sobre Presupuesto (+${(executionPercent - 100)}%)`;
+            statusTextEl.style.color = "var(--color-danger)";
+        } else if (executionPercent < 95) {
+            statusTextEl.textContent = `Bajo Presupuesto (${executionPercent}%)`;
+            statusTextEl.style.color = "var(--color-success)";
+        } else {
+            statusTextEl.textContent = "Presupuesto Ajustado al Plan";
+            statusTextEl.style.color = "var(--vanti-yellow)";
         }
+    }
 
-        row.innerHTML = `
-            <span class="cost-proj-name">${proj.name}</span>
-            <span class="cost-val-planned">$${proj.plannedCost.toFixed(1)}M</span>
-            <span class="cost-val-actual ${devClass}">${devText}</span>
-        `;
-        list.appendChild(row);
+    // 3. Populate EVM Cards
+    document.getElementById("evm-val-pv").textContent = `$${portfolioPV.toFixed(1)}M`;
+    document.getElementById("evm-val-ev").textContent = `$${portfolioEV.toFixed(1)}M`;
+    document.getElementById("evm-val-ac").textContent = `$${portfolioAC.toFixed(1)}M`;
+    
+    const cpiEl = document.getElementById("evm-val-cpi");
+    const spiEl = document.getElementById("evm-val-spi");
+    cpiEl.textContent = portfolioCPI.toFixed(2);
+    spiEl.textContent = portfolioSPI.toFixed(2);
+
+    // CPI/SPI Colors
+    cpiEl.className = "evm-card-value " + (portfolioCPI >= 1.0 ? "cpi-good" : (portfolioCPI >= 0.9 ? "cpi-alert" : "cpi-bad"));
+    spiEl.className = "evm-card-value " + (portfolioSPI >= 1.0 ? "spi-good" : (portfolioSPI >= 0.9 ? "spi-alert" : "spi-bad"));
+
+    // 4. Render Health Radar Table Rows (Panel 4.4)
+    const radarTbody = document.getElementById("evm-radar-tbody");
+    if (radarTbody) {
+        radarTbody.innerHTML = "";
+        
+        projects.forEach(proj => {
+            const projHUs = activeHUs.filter(h => h.projectId === proj.id);
+            let projPV = 0;
+            let projEV = 0;
+            let projAC = 0;
+            
+            projHUs.forEach(hu => {
+                projPV += hu.plannedCost;
+                projEV += (hu.progress / 100) * hu.plannedCost;
+                projAC += hu.actualCost;
+            });
+            
+            const projCPI = projAC > 0 ? (projEV / projAC) : 1.0;
+            const projSPI = projPV > 0 ? (projEV / projPV) : 1.0;
+            
+            let healthText = "";
+            let healthClass = "";
+            
+            if (projCPI >= 0.98 && projSPI >= 0.98) {
+                healthText = "Saludable (Bajo Presupuesto & A tiempo)";
+                healthClass = "success";
+            } else if (projCPI >= 0.9 && projSPI >= 0.9) {
+                healthText = "En Rango (Fricción Menor)";
+                healthClass = "warning";
+            } else if (projCPI < 0.9 && projSPI < 0.9) {
+                healthText = "Crítico (Sobre costo & Atrasado)";
+                healthClass = "danger";
+            } else if (projCPI < 0.9) {
+                healthText = "Alerta (Sobre costo)";
+                healthClass = "danger";
+            } else {
+                healthText = "Alerta (Atrasado)";
+                healthClass = "warning";
+            }
+            
+            const devText = proj.slippageDays > 0 ? `+${proj.slippageDays} días` : "A tiempo";
+            const devClass = proj.slippageDays > 0 ? "cost-overrun" : "cost-underrun";
+            
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>
+                    <strong style="color:var(--text-main); font-size:0.85rem;">${proj.name}</strong>
+                    <div style="font-size:0.7rem; color:var(--text-muted);">${proj.code}</div>
+                </td>
+                <td>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <span style="font-weight:600;">${proj.progress}%</span>
+                        <div class="progress-bar-container" style="height:4px; max-width:80px; margin:0;">
+                            <div class="progress-bar-fill progress-blue" style="width: ${proj.progress}%"></div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <span class="${devClass}" style="font-weight:600;">${devText}</span>
+                </td>
+                <td>
+                    <span style="color:var(--text-muted); font-size:0.75rem;">$${projAC.toFixed(1)}M / $${projPV.toFixed(1)}M</span>
+                </td>
+                <td>
+                    <span style="font-weight:600; color:${projCPI >= 1.0 ? 'var(--color-success)' : (projCPI >= 0.9 ? 'var(--vanti-yellow)' : 'var(--color-danger)')};">${projCPI.toFixed(2)}</span>
+                </td>
+                <td>
+                    <span style="font-weight:600; color:${projSPI >= 1.0 ? 'var(--color-success)' : (projSPI >= 0.9 ? 'var(--vanti-yellow)' : 'var(--color-danger)')};">${projSPI.toFixed(2)}</span>
+                </td>
+                <td>
+                    <span class="health-badge ${healthClass}">${healthText}</span>
+                </td>
+            `;
+            radarTbody.appendChild(tr);
+        });
+    }
+}
+
+// Draw S-Curve Chart (EVM Trend)
+function updateSCurveChart() {
+    const canvas = document.getElementById("sCurveChart");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    // Sample points from minDate to maxDate
+    const minTime = portfolioMinDate.getTime();
+    const maxTime = portfolioMaxDate.getTime();
+    const totalDuration = maxTime - minTime;
+    const stepCount = 12; // 12 sampling points for smooth curve
+    
+    let labels = [];
+    let pvData = [];
+    let evData = [];
+    let acData = [];
+    
+    for (let i = 0; i <= stepCount; i++) {
+        const sampleTime = minTime + (totalDuration * (i / stepCount));
+        const sampleDate = new Date(sampleTime);
+        labels.push(formatDateCompact(sampleDate));
+
+        let cumPV = 0;
+        let cumEV = 0;
+        let cumAC = 0;
+
+        activeHUs.forEach(hu => {
+            const pStart = new Date(hu.plannedStartDate).getTime();
+            const pEnd = new Date(hu.plannedEndDate).getTime();
+            const pDuration = Math.max(1 * 24 * 60 * 60 * 1000, pEnd - pStart);
+
+            const aStart = new Date(hu.actualStartDate).getTime();
+            const aEnd = new Date(hu.actualEndDate).getTime();
+            const aDuration = Math.max(1 * 24 * 60 * 60 * 1000, aEnd - aStart);
+
+            // PV Cumulative
+            if (sampleTime >= pEnd) {
+                cumPV += hu.plannedCost;
+            } else if (sampleTime > pStart) {
+                const ratio = (sampleTime - pStart) / pDuration;
+                cumPV += ratio * hu.plannedCost;
+            }
+
+            // AC Cumulative
+            if (sampleTime >= aEnd) {
+                cumAC += hu.actualCost;
+            } else if (sampleTime > aStart) {
+                const ratio = (sampleTime - aStart) / aDuration;
+                cumAC += ratio * hu.actualCost;
+            }
+
+            // EV Cumulative
+            const earnedTotal = (hu.progress / 100) * hu.plannedCost;
+            if (sampleTime >= aEnd) {
+                cumEV += earnedTotal;
+            } else if (sampleTime > aStart) {
+                const ratio = (sampleTime - aStart) / aDuration;
+                cumEV += ratio * earnedTotal;
+            }
+        });
+
+        pvData.push(parseFloat(pvData.length === 0 ? "0" : cumPV.toFixed(1)));
+        evData.push(parseFloat(evData.length === 0 ? "0" : cumEV.toFixed(1)));
+        acData.push(parseFloat(acData.length === 0 ? "0" : cumAC.toFixed(1)));
+    }
+
+    if (window.mySCurveChart) {
+        window.mySCurveChart.destroy();
+    }
+
+    window.mySCurveChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Planificado (PV)',
+                    data: pvData,
+                    borderColor: 'rgba(2, 132, 199, 0.7)',
+                    borderDash: [4, 4],
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    tension: 0.2,
+                    pointRadius: 2
+                },
+                {
+                    label: 'Ganado (EV)',
+                    data: evData,
+                    borderColor: 'rgba(16, 185, 129, 1)',
+                    backgroundColor: 'transparent',
+                    borderWidth: 3,
+                    tension: 0.2,
+                    pointRadius: 3
+                },
+                {
+                    label: 'Ejecutado (AC)',
+                    data: acData,
+                    borderColor: 'rgba(251, 192, 45, 1)',
+                    backgroundColor: 'transparent',
+                    borderWidth: 3,
+                    tension: 0.2,
+                    pointRadius: 3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        boxWidth: 10,
+                        font: { size: 8 },
+                        color: '#94a3b8'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(255, 255, 255, 0.02)' },
+                    ticks: { color: '#94a3b8', font: { size: 7 } }
+                },
+                y: {
+                    grid: { color: 'rgba(255, 255, 255, 0.02)' },
+                    ticks: { color: '#94a3b8', font: { size: 7 } },
+                    title: {
+                        display: true,
+                        text: 'Presupuesto Acumulado ($M COP)',
+                        color: '#94a3b8',
+                        font: { size: 8 }
+                    }
+                }
+            }
+        }
     });
 }
 
