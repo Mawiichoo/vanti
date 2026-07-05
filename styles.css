@@ -472,11 +472,54 @@ select.select-sm:focus {
 
 .panel-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start; /* Group items to the left, collapse button will push to right */
     align-items: center;
     border-bottom: 1px solid var(--glass-border);
     padding-bottom: 0.8rem;
     margin-bottom: 1.2rem;
+    gap: 1rem;
+}
+
+.panel-collapse-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 4px;
+    transition: all var(--transition-speed);
+    margin-left: auto; /* Pushes the collapse button to the extreme right */
+}
+
+.panel-collapse-btn:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.panel-collapse-btn svg {
+    transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Collapsed Panel state styling */
+.panel.panel-collapsed {
+    padding-bottom: 0.8rem; /* Minimize padding when collapsed */
+}
+
+.panel.panel-collapsed .panel-header {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.panel.panel-collapsed .panel-content {
+    display: none !important;
+}
+
+.panel.panel-collapsed .panel-collapse-btn svg {
+    transform: rotate(-90deg); /* Point left/up when collapsed */
 }
 
 .panel-title {

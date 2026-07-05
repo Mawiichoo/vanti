@@ -653,6 +653,27 @@ function setupEventListeners() {
         selectedBurndownEpic = e.target.value;
         updateBurndownChart();
     });
+
+    // Dynamic Panel Collapse Buttons Injection
+    document.querySelectorAll(".panel").forEach(panel => {
+        const header = panel.querySelector(".panel-header");
+        if (!header) return;
+
+        if (header.querySelector(".panel-collapse-btn")) return;
+
+        const collapseBtn = document.createElement("button");
+        collapseBtn.className = "panel-collapse-btn";
+        collapseBtn.type = "button";
+        collapseBtn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg>`;
+        collapseBtn.title = "Minimizar / Maximizar Panel";
+
+        collapseBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            panel.classList.toggle("panel-collapsed");
+        });
+
+        header.appendChild(collapseBtn);
+    });
 }
 
 // Load data
