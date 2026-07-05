@@ -2,14 +2,6 @@
 
 Este documento presenta el diseño de la **Arquitectura de Referencia de Alto Nivel (HLD)** para la plataforma financiera omnicanal del Ecosistema Financiero Integral de **Vanti S.A. ESP**. El diseño es **agnóstico a la nube** (multi-cloud), **orientado a eventos** (Event-Driven) e **híbrido**, estructurado para desacoplar las transacciones críticas en tiempo real de los procesos en lotes (batch) y contabilidad oficial.
 
-> [!TIP]
-> **Edición en Diagrams.net (Draw.io)**: 
-> Se ha generado un archivo 100% editable para Diagrams.net en tu carpeta: [arquitectura_ecosistema.drawio](file:///c:/Users/crist/OneDrive/Escritorio/Vanti/arquitectura/arquitectura_ecosistema.drawio).
-> Para abrirlo y editarlo interactivamente:
-> 1. Ve a **[app.diagrams.net](https://app.diagrams.net/)**.
-> 2. Selecciona **File -> Open From -> Device** (Archivo -> Abrir desde -> Dispositivo) y carga el archivo.
-> 3. *Nota de diseño*: Se corrigieron los descriptores de líneas (`edge="1"`) para que todos los flujos de comunicación síncronos y asíncronos se visualicen con vectores perfectamente conectados e indicaciones claras.
-
 ---
 
 ## 🗺️ 1. Diagrama de Arquitectura Conceptual
