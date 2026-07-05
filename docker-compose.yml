@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  vanti-dashboard:
+    container_name: vanti_dashboard_container
+    build: .
+    ports:
+      - "8080:80"
+    restart: always
