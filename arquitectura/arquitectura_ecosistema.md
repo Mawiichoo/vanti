@@ -2,6 +2,11 @@
 
 Este documento presenta el diseño de la **Arquitectura de Referencia de Alto Nivel (HLD)** para la plataforma financiera omnicanal del Ecosistema Financiero Integral de **Vanti S.A. ESP**. El diseño es **agnóstico a la nube** (multi-cloud), **orientado a eventos** (Event-Driven) e **híbrido**, estructurado para desacoplar las transacciones críticas en tiempo real de los procesos en lotes (batch) y contabilidad oficial.
 
+### 📊 Dashboard de Control y Gobierno de Portafolio
+> [!NOTE]
+> Puedes acceder al **Dashboard Interactivo en Vivo** para el control y simulación tridimensional del portafolio en el siguiente enlace:
+> **[Portal de Gobierno Vanti (Live Dashboard)](https://mawiichoo.github.io/vanti/)**
+
 ---
 
 ## 🗺️ 1. Diagrama de Arquitectura Conceptual
