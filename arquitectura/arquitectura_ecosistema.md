@@ -94,35 +94,35 @@ graph TD
     end
 
     %% Flujos de Integración Síncronos (REST / gRPC)
-    C1 & C2 & C3 & C4 & C5 ==>|1. HTTPS| GW
-    GW ==>|2. Route| M_IAM
-    M_BIOM ==>|3. Síncrono| EXT_AUTH
-    M_IAM ==>|4. Genera JWT| BFF
-    BFF -.->|5. Get/Set Session| REDIS
+    C1 & C2 & C3 & C4 & C5 -->|"1. HTTPS"| GW
+    GW -->|"2. Route"| M_IAM
+    M_BIOM -->|"3. Síncrono"| EXT_AUTH
+    M_IAM -->|"4. Genera JWT"| BFF
+    BFF -.->|"5. Get/Set Session"| REDIS
     
-    BFF ==>|6. REST Sync| S_CORE
-    BFF ==>|7. REST Sync| S_RISK
-    S_RISK ==>|8. Síncrono| EXT_BURO
-    BFF ==>|9. REST Sync| S_PAY
-    S_PAY ==>|10. Síncrono| EXT_PAY
-    BFF ==>|11. REST Sync| S_CRM
-    BFF ==>|12. REST Sync| S_MONEY
+    BFF -->|"6. REST Sync"| S_CORE
+    BFF -->|"7. REST Sync"| S_RISK
+    S_RISK -->|"8. Síncrono"| EXT_BURO
+    BFF -->|"9. REST Sync"| S_PAY
+    S_PAY -->|"10. Síncrono"| EXT_PAY
+    BFF -->|"11. REST Sync"| S_CRM
+    BFF -->|"12. REST Sync"| S_MONEY
     
-    S_CORE & S_RISK & S_PAY & S_CRM ==>|Orquestación Síncrona| BPM
+    S_CORE & S_RISK & S_PAY & S_CRM -->|"Orquestación Síncrona"| BPM
 
     %% Flujos de Integración Asíncronos (Eventos / Kafka)
-    BPM -.->|13. Publicar Eventos| EVB
-    S_CORE -.->|14. Publicar Eventos| EVB
-    S_PAY -.->|15. Webhook Callback Event| EVB
+    BPM -.->|"13. Publicar Eventos"| EVB
+    S_CORE -.->|"14. Publicar Eventos"| EVB
+    S_PAY -.->|"15. Webhook Callback Event"| EVB
     
-    EVB -->|16. Consume Batch| R_ESTA
-    EVB -->|17. Journal entry| R_SAP
-    EVB -->|18. ETL Streaming| R_LAKE
-    EVB -->|19. Trigger Alert| NOTIF
-    NOTIF -->|20. Push Alert| EXT_NOT
+    EVB -->|"16. Consume Batch"| R_ESTA
+    EVB -->|"17. Journal entry"| R_SAP
+    EVB -->|"18. ETL Streaming"| R_LAKE
+    EVB -->|"19. Trigger Alert"| NOTIF
+    NOTIF -->|"20. Push Alert"| EXT_NOT
     
     %% Observabilidad
-    BFF & CapaServicios & BPM -.->|Logs / Métricas| OBS
+    BFF & CapaServicios & BPM -.->|"Logs / Métricas"| OBS
 ```
 
 ---
