@@ -1,0 +1,826 @@
+{
+  "projects": [
+    {
+      "id": "CORE",
+      "name": "Core Bancario",
+      "code": "CORE",
+      "desc": "Motor transaccional principal y base de datos financiera.",
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-11-15",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-11-20"
+    },
+    {
+      "id": "RIES",
+      "name": "Motor de Riesgo",
+      "code": "RIES",
+      "desc": "Motor de decisión de crédito y análisis de perfil de cliente.",
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-09-23",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-09-16"
+    },
+    {
+      "id": "BIOM",
+      "name": "Validaciones Biométricas",
+      "code": "BIOM",
+      "desc": "Integración de validación de identidad y enrolamiento facial.",
+      "plannedStartDate": "2026-07-29",
+      "plannedEndDate": "2026-09-09",
+      "actualStartDate": "2026-07-29",
+      "actualEndDate": "2026-09-23"
+    },
+    {
+      "id": "SAP",
+      "name": "SAP Contable / Libro Mayor",
+      "code": "SAP",
+      "desc": "Integración contable oficial y sincronización de libro mayor.",
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-12-02",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-12-10"
+    },
+    {
+      "id": "ESTA",
+      "name": "Estados de Cuenta Individuales",
+      "code": "ESTA",
+      "desc": "Generación y consulta de estados de cuenta Gas y No Gas.",
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-09-09",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-08-26"
+    },
+    {
+      "id": "INTE",
+      "name": "Bus de Integración / APIs",
+      "code": "INTE",
+      "desc": "Middleware de orquestación y API Gateway de seguridad.",
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-08-26",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-08-26"
+    },
+    {
+      "id": "PAGO",
+      "name": "Pasarela de Pagos",
+      "code": "PAGO",
+      "desc": "Recaudos y pagos interbancarios en tiempo real.",
+      "plannedStartDate": "2026-08-27",
+      "plannedEndDate": "2026-09-24",
+      "actualStartDate": "2026-08-27",
+      "actualEndDate": "2026-09-24"
+    },
+    {
+      "id": "NOTI",
+      "name": "Notificaciones y Mensajería",
+      "code": "NOTI",
+      "desc": "Servicio de alertas push, SMS y correos transaccionales.",
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-07-21",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-07-21"
+    }
+  ],
+  "epics": [
+    {
+      "id": "CORE-EP-01",
+      "projectId": "CORE",
+      "name": "Arquitectura y Core Transaccional",
+      "desc": "Definición del esquema base e implementación del motor transaccional.",
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-10-20",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-10-27"
+    },
+    {
+      "id": "CORE-EP-02",
+      "projectId": "CORE",
+      "name": "Servicios de Integración y Consultas",
+      "desc": "Desarrollo de microservicios para consulta y movimientos bancarios.",
+      "plannedStartDate": "2026-10-21",
+      "plannedEndDate": "2026-11-15",
+      "actualStartDate": "2026-10-28",
+      "actualEndDate": "2026-11-20"
+    },
+    {
+      "id": "RIES-EP-01",
+      "projectId": "RIES",
+      "name": "Políticas de Scoring y Modelos Crediticios",
+      "desc": "Reglas de negocio y motor de decisión en tiempo real.",
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-09-23",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-09-16"
+    },
+    {
+      "id": "BIOM-EP-01",
+      "projectId": "BIOM",
+      "name": "Validación de Identidad Multicanal",
+      "desc": "Conectividad con el proveedor de biometría y enrolamiento facial.",
+      "plannedStartDate": "2026-07-29",
+      "plannedEndDate": "2026-09-09",
+      "actualStartDate": "2026-07-29",
+      "actualEndDate": "2026-09-23"
+    },
+    {
+      "id": "SAP-EP-01",
+      "projectId": "SAP",
+      "name": "Gobernanza Contable y Asientos",
+      "desc": "Integración contable automatizada con libro mayor.",
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-12-02",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-12-10"
+    },
+    {
+      "id": "ESTA-EP-01",
+      "projectId": "ESTA",
+      "name": "Procesamiento de Extractos Gas/No Gas",
+      "desc": "Servicio de consulta y renderizado de extractos individuales.",
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-09-09",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-08-26"
+    },
+    {
+      "id": "INTE-EP-01",
+      "projectId": "INTE",
+      "name": "Orquestación y Seguridad de APIs",
+      "desc": "Orquestación de microservicios, seguridad OAuth2 y colas de mensajes.",
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-08-26",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-08-26"
+    },
+    {
+      "id": "PAGO-EP-01",
+      "projectId": "PAGO",
+      "name": "Recaudos PSE y Canales de Pago",
+      "desc": "Integración con pasarela de pagos interbancarios.",
+      "plannedStartDate": "2026-08-27",
+      "plannedEndDate": "2026-09-24",
+      "actualStartDate": "2026-08-27",
+      "actualEndDate": "2026-09-24"
+    },
+    {
+      "id": "NOTI-EP-01",
+      "projectId": "NOTI",
+      "name": "Mensajería Transaccional Unificada",
+      "desc": "Servicio centralizado de envío de notificaciones y alertas.",
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-07-21",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-07-21"
+    }
+  ],
+  "hus": [
+    {
+      "id": "CORE-HU-01",
+      "epicId": "CORE-EP-01",
+      "projectId": "CORE",
+      "name": "Diseño de Arquitectura y Base de Datos",
+      "state": "Done",
+      "progress": 100,
+      "plannedCost": 25,
+      "actualCost": 24,
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-07-28",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-07-28",
+      "dependency": "",
+      "isCritical": true,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "CORE-HU-01-AC1",
+          "text": "Definir esquema relacional de tablas transaccionales",
+          "completed": true,
+          "plannedStartDate": "2026-07-01",
+          "plannedEndDate": "2026-07-10"
+        },
+        {
+          "id": "CORE-HU-01-AC2",
+          "text": "Configurar réplicas y políticas de alta disponibilidad",
+          "completed": true,
+          "plannedStartDate": "2026-07-11",
+          "plannedEndDate": "2026-07-18"
+        },
+        {
+          "id": "CORE-HU-01-AC3",
+          "text": "Firmar aprobación del documento de arquitectura técnica",
+          "completed": true,
+          "plannedStartDate": "2026-07-19",
+          "plannedEndDate": "2026-07-25"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "CORE-HU-01-HT1",
+          "text": "Crear scripts de migración liquibase/flyway",
+          "completed": true,
+          "plannedStartDate": "2026-07-01",
+          "plannedEndDate": "2026-07-12"
+        },
+        {
+          "id": "CORE-HU-01-HT2",
+          "text": "Configurar cifrado en reposo TDE en base de datos",
+          "completed": true,
+          "plannedStartDate": "2026-07-13",
+          "plannedEndDate": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "id": "CORE-HU-02",
+      "epicId": "CORE-EP-01",
+      "projectId": "CORE",
+      "name": "Desarrollo del Core Transaccional Bancario",
+      "state": "In Progress",
+      "progress": 60,
+      "plannedCost": 80,
+      "actualCost": 75,
+      "plannedStartDate": "2026-07-29",
+      "plannedEndDate": "2026-10-20",
+      "actualStartDate": "2026-07-29",
+      "actualEndDate": "2026-10-27",
+      "dependency": "CORE-HU-01",
+      "isCritical": true,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "CORE-HU-02-AC1",
+          "text": "Procesamiento de débitos y créditos con balance en tiempo real",
+          "completed": true,
+          "plannedStartDate": "2026-07-29",
+          "plannedEndDate": "2026-08-30"
+        },
+        {
+          "id": "CORE-HU-02-AC2",
+          "text": "Manejo de transacciones ACID y rollbacks ante caídas",
+          "completed": true,
+          "plannedStartDate": "2026-08-31",
+          "plannedEndDate": "2026-09-20"
+        },
+        {
+          "id": "CORE-HU-02-AC3",
+          "text": "Cumplir con latencia menor a 150ms bajo carga concurrente",
+          "completed": false,
+          "plannedStartDate": "2026-09-21",
+          "plannedEndDate": "2026-10-15"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "CORE-HU-02-HT1",
+          "text": "Implementar lógica de bloqueo de cuentas distributivo",
+          "completed": true,
+          "plannedStartDate": "2026-07-29",
+          "plannedEndDate": "2026-08-15"
+        },
+        {
+          "id": "CORE-HU-02-HT2",
+          "text": "Configurar caché Redis para balances rápidos",
+          "completed": false,
+          "plannedStartDate": "2026-08-16",
+          "plannedEndDate": "2026-10-05"
+        }
+      ]
+    },
+    {
+      "id": "CORE-HU-03",
+      "epicId": "CORE-EP-02",
+      "projectId": "CORE",
+      "name": "API de Consultas y Transferencias",
+      "state": "To Do",
+      "progress": 0,
+      "plannedCost": 15,
+      "actualCost": 0,
+      "plannedStartDate": "2026-10-21",
+      "plannedEndDate": "2026-11-15",
+      "actualStartDate": "2026-10-28",
+      "actualEndDate": "2026-11-20",
+      "dependency": "CORE-HU-02",
+      "isCritical": false,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "CORE-HU-03-AC1",
+          "text": "Endpoint expuesto para saldo e histórico de movimientos",
+          "completed": false,
+          "plannedStartDate": "2026-10-21",
+          "plannedEndDate": "2026-11-05"
+        },
+        {
+          "id": "CORE-HU-03-AC2",
+          "text": "Validación de token de sesión en cabecera HTTP",
+          "completed": false,
+          "plannedStartDate": "2026-11-06",
+          "plannedEndDate": "2026-11-15"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "CORE-HU-03-HT1",
+          "text": "Generar especificación OpenAPI / Swagger",
+          "completed": false,
+          "plannedStartDate": "2026-10-21",
+          "plannedEndDate": "2026-10-30"
+        }
+      ]
+    },
+    {
+      "id": "RIES-HU-01",
+      "epicId": "RIES-EP-01",
+      "projectId": "RIES",
+      "name": "Definición de Reglas y Modelos de Scoring",
+      "state": "Done",
+      "progress": 100,
+      "plannedCost": 20,
+      "actualCost": 22,
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-07-28",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-08-04",
+      "dependency": "",
+      "isCritical": false,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "RIES-HU-01-AC1",
+          "text": "Mapear variables de riesgo financiero de clientes Gas",
+          "completed": true,
+          "plannedStartDate": "2026-07-01",
+          "plannedEndDate": "2026-07-12"
+        },
+        {
+          "id": "RIES-HU-01-AC2",
+          "text": "Definir modelo de scoring para clientes No Gas",
+          "completed": true,
+          "plannedStartDate": "2026-07-13",
+          "plannedEndDate": "2026-07-20"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "RIES-HU-01-HT1",
+          "text": "Cargar árbol de decisión inicial en motor Drools/Camunda",
+          "completed": true,
+          "plannedStartDate": "2026-07-01",
+          "plannedEndDate": "2026-07-15"
+        }
+      ]
+    },
+    {
+      "id": "RIES-HU-02",
+      "epicId": "RIES-EP-01",
+      "projectId": "RIES",
+      "name": "Desarrollo de API de Decisión en Tiempo Real",
+      "state": "In Progress",
+      "progress": 33,
+      "plannedCost": 60,
+      "actualCost": 40,
+      "plannedStartDate": "2026-07-29",
+      "plannedEndDate": "2026-09-23",
+      "actualStartDate": "2026-07-29",
+      "actualEndDate": "2026-09-16",
+      "dependency": "CORE-HU-01",
+      "isCritical": true,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "RIES-HU-02-AC1",
+          "text": "API devuelve pre-aprobación en menos de 2 segundos",
+          "completed": true,
+          "plannedStartDate": "2026-07-29",
+          "plannedEndDate": "2026-08-15"
+        },
+        {
+          "id": "RIES-HU-02-AC2",
+          "text": "Integrar Buró de Crédito externo en cascada",
+          "completed": false,
+          "plannedStartDate": "2026-08-16",
+          "plannedEndDate": "2026-09-10"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "RIES-HU-02-HT1",
+          "text": "Optimizar consultas pesadas al histórico crediticio",
+          "completed": false,
+          "plannedStartDate": "2026-07-29",
+          "plannedEndDate": "2026-08-25"
+        }
+      ]
+    },
+    {
+      "id": "BIOM-HU-01",
+      "epicId": "BIOM-EP-01",
+      "projectId": "BIOM",
+      "name": "Homologación con Proveedor y Enrolamiento Facial",
+      "state": "In Progress",
+      "progress": 50,
+      "plannedCost": 35,
+      "actualCost": 42,
+      "plannedStartDate": "2026-07-29",
+      "plannedEndDate": "2026-09-09",
+      "actualStartDate": "2026-07-29",
+      "actualEndDate": "2026-09-23",
+      "dependency": "CORE-HU-01",
+      "isCritical": true,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "BIOM-HU-01-AC1",
+          "text": "Integrar SDK facial de validación con App móvil",
+          "completed": true,
+          "plannedStartDate": "2026-07-29",
+          "plannedEndDate": "2026-08-10"
+        },
+        {
+          "id": "BIOM-HU-01-AC2",
+          "text": "Cumplir directrices de la Registraduría Nacional de Identidad",
+          "completed": true,
+          "plannedStartDate": "2026-08-11",
+          "plannedEndDate": "2026-08-25"
+        },
+        {
+          "id": "BIOM-HU-01-AC3",
+          "text": "Validar prueba de vida del usuario (anti-spoofing)",
+          "completed": false,
+          "plannedStartDate": "2026-08-26",
+          "plannedEndDate": "2026-09-05"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "BIOM-HU-01-HT1",
+          "text": "Manejo de errores ante desconexión de servicio de biometría",
+          "completed": false,
+          "plannedStartDate": "2026-07-29",
+          "plannedEndDate": "2026-08-18"
+        }
+      ]
+    },
+    {
+      "id": "SAP-HU-01",
+      "epicId": "SAP-EP-01",
+      "projectId": "SAP",
+      "name": "Mapeo de Cuentas Contables y Estructura SAP",
+      "state": "Done",
+      "progress": 100,
+      "plannedCost": 15,
+      "actualCost": 15,
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-07-21",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-07-21",
+      "dependency": "",
+      "isCritical": false,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "SAP-HU-01-AC1",
+          "text": "Definir matriz de homologación contable CORE-SAP",
+          "completed": true,
+          "plannedStartDate": "2026-07-01",
+          "plannedEndDate": "2026-07-10"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "SAP-HU-01-HT1",
+          "text": "Configurar cuentas puente en Libro Mayor SAP",
+          "completed": true,
+          "plannedStartDate": "2026-07-01",
+          "plannedEndDate": "2026-07-15"
+        }
+      ]
+    },
+    {
+      "id": "SAP-HU-02",
+      "epicId": "SAP-EP-01",
+      "projectId": "SAP",
+      "name": "Interfaz de Asientos Contables Automatizados",
+      "state": "To Do",
+      "progress": 0,
+      "plannedCost": 40,
+      "actualCost": 0,
+      "plannedStartDate": "2026-10-21",
+      "plannedEndDate": "2026-12-02",
+      "actualStartDate": "2026-10-28",
+      "actualEndDate": "2026-12-10",
+      "dependency": "CORE-HU-02",
+      "isCritical": false,
+      "isMVP": false,
+      "acceptanceCriteria": [
+        {
+          "id": "SAP-HU-02-AC1",
+          "text": "Carga diaria de asientos resumidos vía RFC/BAPI",
+          "completed": false,
+          "plannedStartDate": "2026-10-21",
+          "plannedEndDate": "2026-11-15"
+        },
+        {
+          "id": "SAP-HU-02-AC2",
+          "text": "Control de descuadres contables y alertas automáticas",
+          "completed": false,
+          "plannedStartDate": "2026-11-16",
+          "plannedEndDate": "2026-11-25"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "SAP-HU-02-HT1",
+          "text": "Crear cola Kafka para mensajería de auditoría contable",
+          "completed": false,
+          "plannedStartDate": "2026-10-21",
+          "plannedEndDate": "2026-11-05"
+        }
+      ]
+    },
+    {
+      "id": "ESTA-HU-01",
+      "epicId": "ESTA-EP-01",
+      "projectId": "ESTA",
+      "name": "Estructuración de Datos y PDF Clientes Gas",
+      "state": "Done",
+      "progress": 100,
+      "plannedCost": 18,
+      "actualCost": 16,
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-07-28",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-07-21",
+      "dependency": "",
+      "isCritical": false,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "ESTA-HU-01-AC1",
+          "text": "Diseño de layout unificado de estado de cuenta mensual",
+          "completed": true,
+          "plannedStartDate": "2026-07-01",
+          "plannedEndDate": "2026-07-10"
+        },
+        {
+          "id": "ESTA-HU-01-AC2",
+          "text": "Generación masiva de PDFs en lote en menos de 1 hora",
+          "completed": true,
+          "plannedStartDate": "2026-07-11",
+          "plannedEndDate": "2026-07-22"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "ESTA-HU-01-HT1",
+          "text": "Integrar motor JasperReports/Thymeleaf",
+          "completed": true,
+          "plannedStartDate": "2026-07-01",
+          "plannedEndDate": "2026-07-15"
+        }
+      ]
+    },
+    {
+      "id": "ESTA-HU-02",
+      "epicId": "ESTA-EP-01",
+      "projectId": "ESTA",
+      "name": "Portal y API de Consulta para Clientes No Gas",
+      "state": "In Progress",
+      "progress": 33,
+      "plannedCost": 25,
+      "actualCost": 10,
+      "plannedStartDate": "2026-07-29",
+      "plannedEndDate": "2026-09-09",
+      "actualStartDate": "2026-07-29",
+      "actualEndDate": "2026-08-26",
+      "dependency": "ESTA-HU-01",
+      "isCritical": false,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "ESTA-HU-02-AC1",
+          "text": "Visualización del extracto en el portal web corporativo",
+          "completed": true,
+          "plannedStartDate": "2026-07-29",
+          "plannedEndDate": "2026-08-10"
+        },
+        {
+          "id": "ESTA-HU-02-AC2",
+          "text": "Soporte de consulta en tiempo real desde la App Vanti",
+          "completed": false,
+          "plannedStartDate": "2026-08-11",
+          "plannedEndDate": "2026-09-01"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "ESTA-HU-02-HT1",
+          "text": "Crear API RESTful con caché de lectura Redis",
+          "completed": false,
+          "plannedStartDate": "2026-07-29",
+          "plannedEndDate": "2026-08-20"
+        }
+      ]
+    },
+    {
+      "id": "INTE-HU-01",
+      "epicId": "INTE-EP-01",
+      "projectId": "INTE",
+      "name": "Configuración de API Gateway y OAuth2",
+      "state": "Done",
+      "progress": 100,
+      "plannedCost": 15,
+      "actualCost": 14,
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-07-21",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-07-21",
+      "dependency": "",
+      "isCritical": true,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "INTE-HU-01-AC1",
+          "text": "Montaje de WSO2 / Apigee en ambiente AWS",
+          "completed": true,
+          "plannedStartDate": "2026-07-01",
+          "plannedEndDate": "2026-07-10"
+        },
+        {
+          "id": "INTE-HU-01-AC2",
+          "text": "Configurar proveedor de identidad (Okta/Keycloak)",
+          "completed": true,
+          "plannedStartDate": "2026-07-11",
+          "plannedEndDate": "2026-07-15"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "INTE-HU-01-HT1",
+          "text": "Crear políticas de rate limiting y CORS",
+          "completed": true,
+          "plannedStartDate": "2026-07-01",
+          "plannedEndDate": "2026-07-12"
+        }
+      ]
+    },
+    {
+      "id": "INTE-HU-02",
+      "epicId": "INTE-EP-01",
+      "projectId": "INTE",
+      "name": "Orquestación de Colas de Mensajería",
+      "state": "In Progress",
+      "progress": 50,
+      "plannedCost": 30,
+      "actualCost": 20,
+      "plannedStartDate": "2026-07-22",
+      "plannedEndDate": "2026-08-26",
+      "actualStartDate": "2026-07-22",
+      "actualEndDate": "2026-08-26",
+      "dependency": "INTE-HU-01",
+      "isCritical": true,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "INTE-HU-02-AC1",
+          "text": "Orquestación asíncrona de eventos transaccionales",
+          "completed": true,
+          "plannedStartDate": "2026-07-22",
+          "plannedEndDate": "2026-08-10"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "INTE-HU-02-HT1",
+          "text": "Configurar broker RabbitMQ / Kafka en Kubernetes",
+          "completed": false,
+          "plannedStartDate": "2026-07-22",
+          "plannedEndDate": "2026-08-15"
+        }
+      ]
+    },
+    {
+      "id": "PAGO-HU-01",
+      "epicId": "PAGO-EP-01",
+      "projectId": "PAGO",
+      "name": "Integración con PSE e Interbancarios",
+      "state": "To Do",
+      "progress": 0,
+      "plannedCost": 20,
+      "actualCost": 0,
+      "plannedStartDate": "2026-08-27",
+      "plannedEndDate": "2026-09-24",
+      "actualStartDate": "2026-08-27",
+      "actualEndDate": "2026-09-24",
+      "dependency": "INTE-HU-02",
+      "isCritical": false,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "PAGO-HU-01-AC1",
+          "text": "Implementación del flujo de redirección PSE",
+          "completed": false,
+          "plannedStartDate": "2026-08-27",
+          "plannedEndDate": "2026-09-10"
+        },
+        {
+          "id": "PAGO-HU-01-AC2",
+          "text": "Conciliación de pagos exitosos, fallidos y pendientes",
+          "completed": false,
+          "plannedStartDate": "2026-09-11",
+          "plannedEndDate": "2026-09-24"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "PAGO-HU-01-HT1",
+          "text": "Configurar llaves de cifrado HMAC y firma digital",
+          "completed": false,
+          "plannedStartDate": "2026-08-27",
+          "plannedEndDate": "2026-09-05"
+        }
+      ]
+    },
+    {
+      "id": "NOTI-HU-01",
+      "epicId": "NOTI-EP-01",
+      "projectId": "NOTI",
+      "name": "Servicio de Notificaciones Push/SMS/Email",
+      "state": "To Do",
+      "progress": 0,
+      "plannedCost": 12,
+      "actualCost": 0,
+      "plannedStartDate": "2026-07-01",
+      "plannedEndDate": "2026-07-21",
+      "actualStartDate": "2026-07-01",
+      "actualEndDate": "2026-07-21",
+      "dependency": "",
+      "isCritical": false,
+      "isMVP": false,
+      "acceptanceCriteria": [
+        {
+          "id": "NOTI-HU-01-AC1",
+          "text": "Plantillas HTML responsivas para correos transaccionales",
+          "completed": false,
+          "plannedStartDate": "2026-07-01",
+          "plannedEndDate": "2026-07-10"
+        },
+        {
+          "id": "NOTI-HU-01-AC2",
+          "text": "Integrar proveedor SMS (Twilio/Infobip)",
+          "completed": false,
+          "plannedStartDate": "2026-07-11",
+          "plannedEndDate": "2026-07-15"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "NOTI-HU-01-HT1",
+          "text": "Implementar colas de reintentos para notificaciones fallidas",
+          "completed": false,
+          "plannedStartDate": "2026-07-01",
+          "plannedEndDate": "2026-07-08"
+        }
+      ]
+    },
+    {
+      "id": "CORE-HU-04",
+      "projectId": "CORE",
+      "epicId": "CORE-EP-02",
+      "name": "Integracion SAP",
+      "state": "To Do",
+      "progress": 0,
+      "plannedCost": 10,
+      "actualCost": 2,
+      "plannedStartDate": "2026-07-05",
+      "plannedEndDate": "2026-09-30",
+      "actualStartDate": "2026-07-05",
+      "actualEndDate": "2026-10-13",
+      "dependency": "",
+      "isCritical": false,
+      "isMVP": true,
+      "acceptanceCriteria": [
+        {
+          "id": "HU-AC1",
+          "text": "stack de pruebas",
+          "completed": false,
+          "plannedStartDate": "2026-07-05",
+          "plannedEndDate": "2026-07-13",
+          "actualStartDate": "2026-07-05",
+          "actualEndDate": "2026-07-13"
+        }
+      ],
+      "technicalTasks": [
+        {
+          "id": "HU-HT1",
+          "text": "yo como QA debo ejecutar todas las pruebas de carga sobre el endpoint de integracion con SAP",
+          "completed": false,
+          "plannedStartDate": "2026-07-05",
+          "plannedEndDate": "2026-09-23",
+          "actualStartDate": "2026-07-05",
+          "actualEndDate": "2026-09-23"
+        }
+      ]
+    }
+  ]
+}

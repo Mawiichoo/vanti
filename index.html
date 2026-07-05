@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanti - Dashboard de Portafolio Ecosistema Financiero</title>
+    <meta name="description" content="Tablero estratégico de control y gobierno de portafolio para el ecosistema financiero integral de Vanti.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="vanti-logo">
+                    vanti<span>.</span>
+                </div>
+                <div class="logo-tagline">Más formas de avanzar</div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active" id="nav-dashboard">
+                        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                        Tablero CTO
+                    </li>
+                    <li id="nav-simulator">
+                        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm0-4h-2V7h2v7z"/></svg>
+                        Simulador de Crisis
+                    </li>
+                    <li id="nav-data-manager">
+                        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                        Carga y Persistencia
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="role-badge">
+                    <div class="avatar">JP</div>
+                    <div class="info">
+                        <span class="name">Jefe de Portafolio</span>
+                        <span class="role">Gobierno &amp; Arquitectura</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="content-header">
+                <div class="header-title">
+                    <h1>Ecosistema Financiero Integral</h1>
+                    <p class="subtitle">Monitoreo y Control Multidimensional en Tiempo Real</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="btn-export-json">
+                        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                        Exportar JSON
+                    </button>
+                    <button class="btn btn-primary" id="btn-import-json-trigger">
+                        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>
+                        Cargar Avances
+                    </button>
+                    <input type="file" id="file-import-json" accept=".json" style="display: none;">
+                </div>
+            </header>
+
+            <!-- Global Status Ribbon -->
+            <section class="kpi-grid">
+                <div class="kpi-card" id="kpi-health">
+                    <div class="kpi-title">Salud del Portafolio</div>
+                    <div class="kpi-value-container">
+                        <span class="kpi-value health-text" id="val-health">En Orden</span>
+                        <span class="status-indicator status-green" id="indicator-health"></span>
+                    </div>
+                    <div class="kpi-desc">8 de 8 frentes operando</div>
+                </div>
+                <div class="kpi-card" id="kpi-budget">
+                    <div class="kpi-title">Presupuesto Ejecutado</div>
+                    <div class="kpi-value-container">
+                        <span class="kpi-value" id="val-budget-percent">0%</span>
+                        <span class="kpi-subval" id="val-budget-absolute">$0M / $0M</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="fill-budget" style="width: 0%"></div>
+                    </div>
+                    <div class="kpi-desc" id="desc-budget-variance">Desviación: $0M</div>
+                </div>
+                <div class="kpi-card" id="kpi-time">
+                    <div class="kpi-title">Desviación de Calendario</div>
+                    <div class="kpi-value-container">
+                        <span class="kpi-value" id="val-time-deviation">0 días</span>
+                        <span class="kpi-subval text-warning" id="val-time-date">Fin: --/--/----</span>
+                    </div>
+                    <div class="kpi-desc" id="desc-time-status">Ruta crítica sin bloqueos</div>
+                </div>
+                <div class="kpi-card" id="kpi-progress">
+                    <div class="kpi-title">Historias de Usuario (HUs)</div>
+                    <div class="kpi-value-container">
+                        <span class="kpi-value" id="val-hu-completion">0%</span>
+                        <span class="kpi-subval" id="val-hu-ratio">0 / 0 HUs</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill progress-blue" id="fill-hu" style="width: 0%"></div>
+                    </div>
+                    <div class="kpi-desc">Avance real del backlog</div>
+                </div>
+            </section>
+
+            <!-- Dashboard Split View -->
+            <div class="dashboard-grid">
+                <!-- Left: Multilevel Project List & HU Management -->
+                <section class="panel project-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title">4.1 Visibilidad de Avance (Proyectos, Épicas e HUs con Fechas)</h2>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm btn-outline" id="btn-add-epic">
+                                + Agregar Épica
+                            </button>
+                            <button class="btn btn-sm btn-primary" id="btn-add-hu">
+                                + Agregar HU
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel-content scrollable">
+                        <div id="projects-accordion" class="projects-accordion">
+                            <!-- Dynamically filled by app.js -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Right Pane: Split between Gantt, Burndown and Financial Controls -->
+                <div class="right-column-grid">
+                    <!-- Top Right: Gantt / Route critical path -->
+                    <section class="panel timeline-panel">
+                        <div class="panel-header">
+                            <h2 class="panel-title">4.2 Ruta Crítica &amp; Cronograma por Calendario</h2>
+                            <div class="timeline-legend">
+                                <span class="legend-item"><span class="legend-dot dot-planned"></span>Plan</span>
+                                <span class="legend-item"><span class="legend-dot dot-actual"></span>Real</span>
+                                <span class="legend-item"><span class="legend-dot dot-critical"></span>Crítico</span>
+                            </div>
+                        </div>
+                        <div class="panel-content">
+                            <!-- Date Timeline scale indicators -->
+                            <div class="timeline-scale-labels" id="timeline-scale-labels" style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-bottom:5px; padding-left:120px;">
+                                <span>Jul 2026</span>
+                                <span>Ago 2026</span>
+                                <span>Sep 2026</span>
+                                <span>Oct 2026</span>
+                                <span>Nov 2026</span>
+                                <span>Dic 2026</span>
+                            </div>
+                            <div class="timeline-container" id="timeline-container">
+                                <!-- Dynamically filled by app.js -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Middle Right: Dynamic Burndown Chart (New) -->
+                    <section class="panel burndown-panel">
+                        <div class="panel-header">
+                            <h2 class="panel-title" id="burndown-chart-title">Burndown de Esfuerzo</h2>
+                            <div class="burndown-selectors">
+                                <select id="burndown-project-select" class="select-sm">
+                                    <!-- Options filled dynamically -->
+                                </select>
+                                <select id="burndown-epic-select" class="select-sm">
+                                    <!-- Options filled dynamically -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="panel-content chart-wrapper-panel">
+                            <div class="chart-container" style="position: relative; height: 260px; width: 100%;">
+                                <canvas id="burndownChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Bottom Right: Cost control -->
+                    <section class="panel cost-panel">
+                        <div class="panel-header">
+                            <h2 class="panel-title">4.3 Control Tridimensional de Costos</h2>
+                        </div>
+                        <div class="panel-content">
+                            <div class="cost-summary-container">
+                                <div class="cost-chart-wrapper">
+                                    <div class="gauge-container">
+                                        <!-- Interactive SVG Gauge -->
+                                        <svg class="gauge" viewBox="0 0 100 50">
+                                            <path class="gauge-bg" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke-width="8"/>
+                                            <path class="gauge-fill" id="cost-gauge-fill" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke-width="8" stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+                                        </svg>
+                                        <div class="gauge-val" id="cost-gauge-value">0%</div>
+                                    </div>
+                                    <div class="gauge-title">Ejecución del Presupuesto</div>
+                                </div>
+                                <div class="cost-list" id="cost-breakdown-list">
+                                    <!-- Dynamic rows representing each project's planned vs actual cost -->
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Crisis Simulator Section -->
+            <section class="panel simulator-section" id="simulator-section" style="display: none;">
+                <div class="panel-header">
+                    <h2 class="panel-title">Simulador de Escenarios de Capacidad, Trade-offs y MVP</h2>
+                    <button class="btn btn-sm btn-secondary" id="btn-reset-simulation">Restablecer Factores</button>
+                </div>
+                <div class="panel-content">
+                    <p class="simulator-intro">Altera variables del entorno corporativo para simular en tiempo real cómo impactan la fecha de entrega y los costos totales del portafolio.</p>
+                    <div class="simulator-controls-grid">
+                        <div class="control-card">
+                            <label class="control-label" for="sim-capacity">Capacidad de Células de Desarrollo</label>
+                            <div class="control-input-wrapper">
+                                <input type="range" id="sim-capacity" min="50" max="150" value="100" class="slider">
+                                <span class="slider-val" id="sim-capacity-val">100% (Normal)</span>
+                            </div>
+                            <span class="control-help">Simula pérdida de talento clave o sobretiempo de células.</span>
+                        </div>
+                        
+                        <div class="control-card">
+                            <label class="control-label" for="sim-biometrics-delay">Retraso en Validación Biométrica</label>
+                            <div class="control-input-wrapper">
+                                <label class="switch">
+                                    <input type="checkbox" id="sim-biometrics-delay">
+                                    <span class="toggle-slider round"></span>
+                                </label>
+                                <span class="toggle-text" id="sim-biometrics-text">No (+0 días)</span>
+                            </div>
+                            <span class="control-help">Simula cuellos de botella técnicos en la homologación con el proveedor biométrico.</span>
+                        </div>
+
+                        <div class="control-card">
+                            <label class="control-label" for="sim-scope-cut">Estrategia MVP (Recorte de Alcance)</label>
+                            <div class="control-input-wrapper">
+                                <label class="switch">
+                                    <input type="checkbox" id="sim-scope-cut">
+                                    <span class="toggle-slider round"></span>
+                                </label>
+                                <span class="toggle-text" id="sim-scope-text">No (Alcance Completo)</span>
+                            </div>
+                            <span class="control-help">Aplica una reducción de alcance desactivando HUs secundarias para acelerar el lanzamiento.</span>
+                        </div>
+                    </div>
+
+                    <div class="simulation-results" id="simulation-results-panel" style="display: none;">
+                        <h3 class="results-title">Análisis de Trade-offs &amp; Propuesta al CTO</h3>
+                        <div class="results-layout">
+                            <div class="results-text" id="sim-analysis-text">
+                                <!-- Generated by simulation algorithm in app.js -->
+                            </div>
+                            <div class="results-metrics">
+                                <div class="res-metric">
+                                    <span class="res-label">Desviación Proyectada:</span>
+                                    <span class="res-value" id="sim-res-days">+0 días</span>
+                                </div>
+                                <div class="res-metric">
+                                    <span class="res-label">Presupuesto Estimado:</span>
+                                    <span class="res-value" id="sim-res-cost">$0M</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Persistence Panel -->
+            <section class="panel persistence-section" id="persistence-section" style="display: none;">
+                <div class="panel-header">
+                    <h2 class="panel-title">Gobierno de Datos: Persistencia y Cargue de Backlog</h2>
+                </div>
+                <div class="panel-content">
+                    <div class="persistence-grid">
+                        <div class="pers-card">
+                            <h3>Base de Datos Local (Navegador)</h3>
+                            <p>El dashboard auto-guarda todos los cambios que realizas (avances de HUs, checklists de criterios y simulaciones) en la memoria local de tu navegador.</p>
+                            <div class="pers-actions">
+                                <button class="btn btn-secondary" id="btn-reset-all">Restablecer Datos de Fábrica</button>
+                            </div>
+                        </div>
+                        <div class="pers-card">
+                            <h3>Carga de Avances (PMO / Células)</h3>
+                            <p>Importa archivos de datos en formato JSON para actualizar de forma masiva la jerarquía de Epicas, HUs, criterios de aceptación, fechas y presupuestos del portafolio.</p>
+                            <div class="pers-actions">
+                                <button class="btn btn-primary" id="btn-import-json-trigger-2">Seleccionar Archivo JSON</button>
+                                <a class="btn btn-link" id="btn-download-template" href="#">Descargar Plantilla JSON (Proyectos, Epicas, HUs con Fechas)</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- PROJECT EDIT MODAL (NEW) -->
+    <div class="modal" id="project-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Editar Configuración de Proyecto</h3>
+                <button class="close-btn" id="btn-close-project-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="project-form">
+                    <input type="hidden" id="form-project-id-edit">
+                    <div class="form-group">
+                        <label for="form-project-name-edit">Nombre del Proyecto</label>
+                        <input type="text" id="form-project-name-edit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-project-desc-edit">Descripción</label>
+                        <input type="text" id="form-project-desc-edit" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="form-project-planned-start">Inicio Planificado</label>
+                            <input type="date" id="form-project-planned-start" required>
+                        </div>
+                        <div class="form-group col">
+                            <label for="form-project-planned-end">Fin Planificado</label>
+                            <input type="date" id="form-project-planned-end" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="form-project-actual-start">Inicio Real</label>
+                            <input type="date" id="form-project-actual-start" required>
+                        </div>
+                        <div class="form-group col">
+                            <label for="form-project-actual-end">Fin Real</label>
+                            <input type="date" id="form-project-actual-end" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="btn-cancel-project-modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- EPIC EDIT MODAL (NEW) -->
+    <div class="modal" id="epic-modal">
+        <div class="modal-content">
+             <div class="modal-header">
+                <h3 id="epic-modal-title">Editar Configuración de Épica</h3>
+                <button class="close-btn" id="btn-close-epic-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="epic-form">
+                    <input type="hidden" id="form-epic-id-edit">
+                    <div class="form-group" id="form-epic-project-group">
+                        <label for="form-epic-project-id">Proyecto Padre</label>
+                        <select id="form-epic-project-id" required>
+                            <!-- Dynamically filled -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-epic-name-edit">Nombre de la Épica</label>
+                        <input type="text" id="form-epic-name-edit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-epic-desc-edit">Descripción</label>
+                        <input type="text" id="form-epic-desc-edit" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="form-epic-planned-start">Inicio Planificado</label>
+                            <input type="date" id="form-epic-planned-start" required>
+                        </div>
+                        <div class="form-group col">
+                            <label for="form-epic-planned-end">Fin Planificado</label>
+                            <input type="date" id="form-epic-planned-end" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="form-epic-actual-start">Inicio Real</label>
+                            <input type="date" id="form-epic-actual-start" required>
+                        </div>
+                        <div class="form-group col">
+                            <label for="form-epic-actual-end">Fin Real</label>
+                            <input type="date" id="form-epic-actual-end" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="btn-cancel-epic-modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- HU Edit/Create Modal (Updated with Date selectors) -->
+    <div class="modal" id="hu-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Agregar Historia de Usuario / Requerimiento</h3>
+                <button class="close-btn" id="btn-close-modal">&times;</button>
+            </div>
+            <div class="modal-body scrollable-modal-body">
+                <form id="hu-form">
+                    <input type="hidden" id="form-hu-id">
+                    
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="form-project-id">Proyecto Relacionado</label>
+                            <select id="form-project-id" required>
+                                <!-- Dynamically filled by app.js -->
+                            </select>
+                        </div>
+                        <div class="form-group col">
+                            <label for="form-epic-id">Épica Relacionada</label>
+                            <select id="form-epic-id" required>
+                                <!-- Dynamically filled by app.js -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form-hu-name">Nombre / Descripción de la Historia de Usuario</label>
+                        <input type="text" id="form-hu-name" required placeholder="Ej. Integración de API de Ahorros">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="form-hu-state">Estado Base</label>
+                            <select id="form-hu-state" required>
+                                <option value="To Do">Por Hacer (To Do)</option>
+                                <option value="In Progress">En Progreso (In Progress)</option>
+                                <option value="Done">Terminado (Done)</option>
+                            </select>
+                        </div>
+                        <div class="form-group col">
+                            <label for="form-hu-dependency">Dependencia de HU (ID)</label>
+                            <select id="form-hu-dependency">
+                                <option value="">Ninguna</option>
+                                <!-- Dynamically filled by app.js -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Date selectors for cascade timing configuration -->
+                    <div class="modal-section" style="margin-bottom:1rem;">
+                        <label class="section-title" style="margin-bottom:0.5rem; display:block;">Planificación de Fechas</label>
+                        <div class="form-row">
+                            <div class="form-group col">
+                                <label for="form-hu-planned-start">Inicio Planificado (Plan)</label>
+                                <input type="date" id="form-hu-planned-start" required>
+                            </div>
+                            <div class="form-group col">
+                                <label for="form-hu-planned-end">Fin Planificado (Plan)</label>
+                                <input type="date" id="form-hu-planned-end" required>
+                            </div>
+                        </div>
+                        <div class="form-row" style="margin-top: 5px;">
+                            <div class="form-group col">
+                                <label for="form-hu-actual-start">Inicio Real / Proyectado</label>
+                                <input type="date" id="form-hu-actual-start" required>
+                            </div>
+                            <div class="form-group col">
+                                <label for="form-hu-actual-end">Fin Real / Proyectado</label>
+                                <input type="date" id="form-hu-actual-end" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="form-hu-planned-cost">Costo Planeado ($M COP)</label>
+                            <input type="number" id="form-hu-planned-cost" min="0" step="0.1" required value="10">
+                        </div>
+                        <div class="form-group col">
+                            <label for="form-hu-actual-cost">Costo Ejecutado Real ($M COP)</label>
+                            <input type="number" id="form-hu-actual-cost" min="0" step="0.1" required value="0">
+                        </div>
+                    </div>
+
+                    <!-- Acceptance Criteria Section -->
+                    <div class="modal-section">
+                        <div class="section-header-flex">
+                            <label class="section-title">Criterios de Aceptación (con Configuración de Fechas)</label>
+                            <button type="button" class="btn btn-sm btn-outline" id="btn-add-form-ac">+ Criterio</button>
+                        </div>
+                        <div id="form-ac-list" class="form-items-list">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Technical Stories / Tasks Section -->
+                    <div class="modal-section" style="margin-top: 1rem;">
+                        <div class="section-header-flex">
+                            <label class="section-title">Historias Técnicas / Tareas (HTs con Configuración de Fechas)</label>
+                            <button type="button" class="btn btn-sm btn-outline" id="btn-add-form-ht">+ Tarea Técnica</button>
+                        </div>
+                        <div id="form-ht-list" class="form-items-list">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="margin-top: 1rem;">
+                        <div class="form-group col checkbox-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="form-hu-is-critical">
+                                <span class="checkmark"></span>
+                                ¿Parte de la Ruta Crítica?
+                            </label>
+                        </div>
+                        <div class="form-group col checkbox-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="form-hu-is-mvp" checked>
+                                <span class="checkmark"></span>
+                                ¿Esencial para MVP?
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="btn-cancel-modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btn-save-hu">Guardar Historia</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JavaScript File -->
+    <script src="app.js"></script>
+</body>
+</html>
