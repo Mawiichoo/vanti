@@ -24,13 +24,13 @@ El siguiente modelo conceptual muestra el desacoplamiento de capas y flujos de i
 graph TD
     %% Estilos de Nodos
     classDef channel fill:#1E293B,stroke:#334155,stroke-width:2px,color:#F8FAFC;
-    classDef gate fill:rgba(251,192,45,0.08),stroke:#FBC02D,stroke-width:2px,color:#FBC02D;
-    classDef media fill:rgba(251,192,45,0.18),stroke:#FBC02D,stroke-width:2px,color:#F8FAFC;
+    classDef gate fill:#FBC02D14,stroke:#FBC02D,stroke-width:2px,color:#FBC02D;
+    classDef media fill:#FBC02D2E,stroke:#FBC02D,stroke-width:2px,color:#F8FAFC;
     classDef bff fill:#1E293B,stroke:#0284c7,stroke-width:2px,color:#F8FAFC;
-    classDef cache fill:rgba(2,132,199,0.08),stroke:#0284c7,stroke-width:1.5px,color:#0284c7;
+    classDef cache fill:#0284C714,stroke:#0284c7,stroke-width:1.5px,color:#0284c7;
     classDef service fill:#1E293B,stroke:#334155,stroke-width:2px,color:#F8FAFC;
-    classDef monetization fill:rgba(16,185,129,0.1),stroke:#10b981,stroke-width:2px,color:#10b981;
-    classDef bpm fill:rgba(16,185,129,0.18),stroke:#10b981,stroke-width:2px,color:#F8FAFC;
+    classDef monetization fill:#10B98119,stroke:#10b981,stroke-width:2px,color:#10b981;
+    classDef bpm fill:#10B9812E,stroke:#10b981,stroke-width:2px,color:#F8FAFC;
     classDef cross fill:#1E293B,stroke:#0284c7,stroke-dasharray: 4 4,color:#94A3B8;
     classDef ext fill:#0F172A,stroke:#94A3B8,stroke-width:1.5px,stroke-dasharray: 5 5,color:#94A3B8;
 
