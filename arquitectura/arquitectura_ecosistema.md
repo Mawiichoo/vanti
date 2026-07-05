@@ -1,163 +1,185 @@
-# Entregable 1: Arquitectura del Ecosistema Tecnológico
+# Entregable 1: Arquitectura de Referencia (HLD) - Ecosistema Financiero
 
-Este documento presenta el diseño de la **Arquitectura de Referencia de Alto Nivel** para la plataforma financiera omnicanal del Ecosistema Financiero Integral de **Vanti S.A. ESP**. El diseño es **agnóstico a la nube** (multi-cloud ready), **orientado a eventos** (Event-Driven) y cuenta con **integraciones híbridas/on-premise** para desacoplar sistemas transaccionales y de registro.
+Este documento presenta el diseño de la **Arquitectura de Referencia de Alto Nivel (HLD)** para la plataforma financiera omnicanal del Ecosistema Financiero Integral de **Vanti S.A. ESP**. El diseño es **agnóstico a la nube** (multi-cloud), **orientado a eventos** (Event-Driven) e **híbrido**, estructurado para desacoplar las transacciones críticas en tiempo real de los procesos en lotes (batch) y contabilidad oficial.
 
 > [!TIP]
 > **Edición en Diagrams.net (Draw.io)**: 
-> Se ha generado un archivo 100% editable para Diagrams.net en tu carpeta: [arquitectura_ecosistema.drawio](file:///c:/Users/crist/OneDrive/Escritorio/Vanti/arquitectura/arquitectura_ecosistema.drawio). 
-> Para abrirlo y editarlo interactivamente, ve a [app.diagrams.net](https://app.diagrams.net/), selecciona **File -> Open From -> Device** (Archivo -> Abrir desde -> Dispositivo) y carga este archivo. Cuenta con los estilos visuales premium integrados (fondo oscuro y paleta Vanti).
+> Se ha generado un archivo 100% editable para Diagrams.net en tu carpeta: [arquitectura_ecosistema.drawio](file:///c:/Users/crist/OneDrive/Escritorio/Vanti/arquitectura/arquitectura_ecosistema.drawio).
+> Para abrirlo y editarlo interactivamente:
+> 1. Ve a **[app.diagrams.net](https://app.diagrams.net/)**.
+> 2. Selecciona **File -> Open From -> Device** (Archivo -> Abrir desde -> Dispositivo) y carga el archivo.
+> 3. *Nota de diseño*: Se corrigieron los descriptores de líneas (`edge="1"`) para que todos los flujos de comunicación síncronos y asíncronos se visualicen con vectores perfectamente conectados e indicaciones claras.
 
 ---
 
-## 🗺️ 1. Diagrama de Arquitectura (Modelo Conceptual)
+## 🗺️ 1. Diagrama de Arquitectura Conceptual
 
-A continuación se presenta el flujo lógico e integraciones del ecosistema:
+### Vista Conceptual de Alto Nivel
+![Arquitectura de Alto Nivel](architecture_hld_banner.jpg)
+
+### Flujo Lógico de Integraciones (Mermaid)
+El siguiente modelo conceptual muestra el desacoplamiento de capas y flujos de integración:
 
 ```mermaid
 graph TD
     %% Estilos de Nodos
     classDef channel fill:#1E293B,stroke:#334155,stroke-width:2px,color:#F8FAFC;
-    classDef gate fill:rgba(251,192,45,0.1),stroke:#FBC02D,stroke-width:2px,color:#FBC02D;
-    classDef bus fill:rgba(2,132,199,0.15),stroke:#0284c7,stroke-width:2px,color:#F8FAFC;
+    classDef gate fill:rgba(251,192,45,0.08),stroke:#FBC02D,stroke-width:2px,color:#FBC02D;
+    classDef media fill:rgba(251,192,45,0.18),stroke:#FBC02D,stroke-width:2px,color:#F8FAFC;
+    classDef bff fill:#1E293B,stroke:#0284c7,stroke-width:2px,color:#F8FAFC;
+    classDef cache fill:rgba(2,132,199,0.08),stroke:#0284c7,stroke-width:1.5px,color:#0284c7;
     classDef service fill:#1E293B,stroke:#334155,stroke-width:2px,color:#F8FAFC;
-    classDef bpm fill:rgba(16,185,129,0.1),stroke:#10b981,stroke-width:2px,color:#10b981;
-    classDef cross fill:#1E293B,stroke:#334155,stroke-dasharray: 5 5,color:#94A3B8;
+    classDef monetization fill:rgba(16,185,129,0.1),stroke:#10b981,stroke-width:2px,color:#10b981;
+    classDef bpm fill:rgba(16,185,129,0.18),stroke:#10b981,stroke-width:2px,color:#F8FAFC;
+    classDef cross fill:#1E293B,stroke:#0284c7,stroke-dasharray: 4 4,color:#94A3B8;
+    classDef ext fill:#0F172A,stroke:#94A3B8,stroke-width:1.5px,stroke-dasharray: 5 5,color:#94A3B8;
 
     %% 1. Canales
-    subgraph Canales ["📱 Canales Digitales & Físicos"]
+    subgraph CapaCanales ["📱 Capa de Canales Digitales y Físicos"]
         C1["App Móvil<br>(iOS / Android)"]:::channel
         C2["Portal Web<br>(Gas / No Gas)"]:::channel
         C3["Portales Aliados<br>(B2B APIs)"]:::channel
         C4["Call Center<br>(IVR / Agentes)"]:::channel
-        C5["Oficinas Vanti<br>(Cajas / Atención)"]:::channel
+        C5["Oficinas Vanti<br>(Cajas / Asesores)"]:::channel
     end
 
-    %% 2. Seguridad y Gateway
-    GW["🛡️ API Gateway & IAM Security<br>(WAF | OAuth2 / OIDC | JWT | MFA | Apigee / AWS API GW)"]:::gate
+    %% 2. Capa de Acceso y Seguridad
+    GW["🛡️ API Gateway & WAF<br>(Apigee / Kong - Perímetro / Control de Tráfico)"]:::gate
+    
+    %% 3. Capa Media (Seguridad y Roles)
+    subgraph CapaMedia ["🔑 Capa Media (Seguridad, Roles e Identidad Síncrona)"]
+        M_IAM["Identity Manager (IAM)<br>(Keycloak / Auth0 - OAuth2 / OIDC)"]:::media
+        M_BIOM["Biometría & KYC<br>(Autorizador Facial y Validaciones)"]:::media
+        M_ROLES["Gestor de Roles / Authz<br>(Roles Gas / No Gas / Internos)"]:::media
+    end
 
-    %% 3. Capa BFF
-    BFF["📱 BFF - Backend For Frontend<br>(GraphQL / Node.js / Go - Agregación de APIs y Consultas Rápidas)"]:::service
+    %% 4. BFF y Caché
+    BFF["📱 BFF - Backend For Frontend<br>(Orquestación de Experiencia REST/gRPC)"]:::bff
+    REDIS["💾 Memoria en Caché<br>(Redis - Session Cache / Config)"]:::cache
 
-    %% 4. Backbone de Eventos
-    EVB["⚡ Backbone de Eventos (Event Bus)<br>(Kafka / RabbitMQ / EventBridge - Cola de Mensajes Asíncrona)"]:::bus
-
-    %% 5. Capa de Microservicios Core
-    subgraph CoreServices ["🏦 Capa de Servicios Financieros y de Negocio"]
-        S_CORE["Core Bancario<br>(Cuentas / Ledger)"]:::service
-        S_RISK["Motor de Riesgo<br>(Scoring / Buró)"]:::service
-        S_BIOM["Biometría / KYC<br>(On-prem / Cloud SDK)"]:::service
+    %% 5. Capa de Servicios de Negocio
+    subgraph CapaServicios ["🏦 Capa de Servicios de Negocio & Monetización"]
+        S_CORE["Core Bancario<br>(Ledger / Cuentas)"]:::service
+        S_RISK["Motor de Riesgo<br>(Scoring / Decisión)"]:::service
         S_PAY["Pasarela de Pagos<br>(PSE / Recaudo / Tarjetas)"]:::service
-        S_CRM["CRM / Cliente 360<br>(Clientes Gas & No Gas)"]:::service
+        S_CRM["CRM / Cliente 360<br>(Gas & No Gas Unified)"]:::service
+        
+        %% Monetización
+        S_MONEY["💰 Capa Monetización<br>(Servicio Buró Vanti / API KYC Aliados)"]:::monetization
     end
 
     %% 6. Orquestación BPM
-    BPM["⚙️ Orquestador de Procesos (BPM Engine)<br>(Camunda / Temporal - Ciclo de Vida: Originación ➔ Scoring ➔ Desembolso)"]:::bpm
+    BPM["⚙️ Orquestador de Procesos (BPM Engine)<br>(Camunda / Temporal - Saga: Originación ➔ Scoring ➔ Desembolso)"]:::bpm
 
-    %% 7. Sistemas de Registro e Insights
-    subgraph RecordSystems ["💼 Capa de Registro Contable y Analítica"]
-        R_ESTA["Estados de Cuenta<br>(Gas / No Gas)"]:::service
-        R_SAP["SAP / Libro Mayor<br>(Contabilidad Oficial)"]:::service
-        R_LAKE["Data Lake / BI<br>(Analítica / CTO Panel)"]:::service
+    %% 7. Sistemas de Registro
+    subgraph RecordSystems ["💼 Capa de Sistemas de Registro y Analytics"]
+        R_ESTA["Estados de Cuenta<br>(Generación Batch)"]:::service
+        R_SAP["SAP / Libro Mayor<br>(Contabilidad Corporativa)"]:::service
+        R_LAKE["Data Lake / Analítica<br>(BI / Scoring de Datos)"]:::service
     end
 
-    %% 8. Transversales
-    NOTIF["✉️ Motor de Notificaciones<br>(SMS / WhatsApp / Push / Email)"]:::cross
-    OBS["🔍 Observabilidad & Auditoría<br>(Logs / Tracing / OpenTelemetry)"]:::cross
+    %% 8. Capa Transversal (Asincrónica)
+    subgraph CapaTransversal ["⚡ Capa Transversal Asincrónica"]
+        EVB["Event Bus (Kafka / RabbitMQ)<br>(Messaging Backbone)"]:::cross
+        NOTIF["✉️ Motor Notificaciones<br>(Email / WhatsApp / SMS)"]:::cross
+        OBS["🔍 Observabilidad & APM<br>(OpenTelemetry / Grafana)"]:::cross
+    end
 
-    %% Relaciones
-    C1 & C2 & C3 & C4 & C5 -->|HTTPS / REST| GW
-    GW -->|REST / JSON| BFF
-    BFF -->|Publicar Eventos / GraphQL| EVB
+    %% 9. Proveedores Externos
+    subgraph ExtProviders ["🌐 Proveedores Externos Edge"]
+        EXT_AUTH["Registraduría Nacional<br>(Bases de Identidad)"]:::ext
+        EXT_BURO["Centrales de Riesgo<br>(Datacrédito / TransUnion)"]:::ext
+        EXT_PAY["Redes Recaudo / PSE<br>(ACH / Redeban)"]:::ext
+        EXT_NOT["Gateway WhatsApp/SMS<br>(Twilio / AWS SNS)"]:::ext
+    end
+
+    %% Flujos de Integración Síncronos (REST / gRPC)
+    C1 & C2 & C3 & C4 & C5 ==>|1. HTTPS| GW
+    GW ==>|2. Route| M_IAM
+    M_BIOM ==>|3. Síncrono| EXT_AUTH
+    M_IAM ==>|4. Genera JWT| BFF
+    BFF -.->|5. Get/Set Session| REDIS
     
-    EVB -->|Sub / Consumo asíncrono| S_CORE
-    EVB -->|Sub / Consumo asíncrono| S_RISK
-    EVB -->|Sub / Consumo asíncrono| S_BIOM
-    EVB -->|Sub / Consumo asíncrono| S_PAY
-    EVB -->|Sub / Consumo asíncrono| S_CRM
-
-    S_CORE & S_RISK & S_BIOM & S_PAY & S_CRM -->|Orquestar Pasos| BPM
+    BFF ==>|6. REST Sync| S_CORE
+    BFF ==>|7. REST Sync| S_RISK
+    S_RISK ==>|8. Síncrono| EXT_BURO
+    BFF ==>|9. REST Sync| S_PAY
+    S_PAY ==>|10. Síncrono| EXT_PAY
+    BFF ==>|11. REST Sync| S_CRM
+    BFF ==>|12. REST Sync| S_MONEY
     
-    BPM -->|Batch / Async| R_ESTA
-    BPM -->|Integración SAP RFC| R_SAP
-    BPM -->|Ingesta / ETL| R_LAKE
+    S_CORE & S_RISK & S_PAY & S_CRM ==>|Orquestación Síncrona| BPM
 
-    BPM -.->|Trigger| NOTIF
-    BFF & EVB & CoreServices -.->|Telemetría APM| OBS
+    %% Flujos de Integración Asíncronos (Eventos / Kafka)
+    BPM -.->|13. Publicar Eventos| EVB
+    S_CORE -.->|14. Publicar Eventos| EVB
+    S_PAY -.->|15. Webhook Callback Event| EVB
+    
+    EVB -->|16. Consume Batch| R_ESTA
+    EVB -->|17. Journal entry| R_SAP
+    EVB -->|18. ETL Streaming| R_LAKE
+    EVB -->|19. Trigger Alert| NOTIF
+    NOTIF -->|20. Push Alert| EXT_NOT
+    
+    %% Observabilidad
+    BFF & CapaServicios & BPM -.->|Logs / Métricas| OBS
 ```
 
 ---
 
-## 🏛️ 2. Desglose Detallado de Capas y Componentes
+## 🏛️ 2. Desglose del Diseño y Justificación de Cambios
 
-### 1. Canales Omnicanal (Capa de Acceso)
-Soporta una experiencia unificada independientemente del medio de contacto del cliente (interno, externo o aliado):
-*   **Canales de Autoservicio**: *App Móvil* nativa y *Portal Web* responsivo, dirigidos a clientes Gas (recaudo de facturas) y No Gas (créditos de consumo).
-*   **Canales Físicos y de Soporte**: *Call Center* (integrado vía IVR) y terminales de *Oficinas Vanti* para que asesores o cajeros consulten y gestionen el mismo inventario de datos.
-*   **Portales Aliados (B2B)**: Consumo seguro por parte de terceros (comercios donde se originan créditos de consumo No Gas).
+### Capa de Acceso y Capa Media (Seguridad, Identidad y Roles)
+*   **API Gateway & WAF**: Es la capa de protección y enrutamiento del perímetro. WAF filtra amenazas y el Gateway distribuye el tráfico.
+*   **Capa Media (Middleware de Identidad)**: 
+    *   *Ubicación*: Se posiciona justo después del API Gateway y antes del BFF (Backend for Frontend).
+    *   *Justificación*: La biometría facial, la prueba de vida (KYC) y la gestión de roles no forman parte de la lógica financiera de negocio. Son mecanismos estrictos de **seguridad y control de acceso**. Por lo tanto, se integran en la Capa Media junto al Identity Manager (IAM) y el Autorizador. 
+    *   *Comportamiento Síncrono*: Esta capa valida la identidad del usuario consumiendo de manera síncrona el servicio del proveedor biométrico y bases de datos nacionales (Registraduría) antes de generar el token **JWT** que autoriza las transacciones posteriores.
 
-### 2. Capa de Seguridad (WAF / IAM / API Gateway)
-El único punto de entrada público de la red que aísla los recursos internos:
-*   **WAF (Web Application Firewall)**: Mitiga ataques DDoS, inyecciones de código y OWASP Top 10.
-*   **IAM (Identity & Access Management)**: Gestión unificada de identidades corporativas y clientes. Utiliza estándares **OAuth2** y **OpenID Connect (OIDC)**.
-*   **Autenticación**: Soporta MFA (Multi-Factor Authentication) por SMS/Email, tokens **JWT** (JSON Web Tokens) firmados con vida útil corta para autorizar solicitudes REST en las capas inferiores.
+### Capa BFF (Backend for Frontend) y Memoria en Caché (Redis)
+*   **BFF**: Traduce las peticiones de los canales en llamadas REST o gRPC síncronas hacia los microservicios core.
+*   **Redis (Memoria en Caché)**: 
+    *   *Ubicación*: Al lado del BFF y de los microservicios transaccionales.
+    *   *Propósito*: Evita sobrecargar las bases de datos transaccionales del Core Bancario y el CRM. Almacena:
+        1. Sesiones activas y tokens JWT.
+        2. Configuración estática de productos, tasas de interés y parámetros del simulador.
+        3. Respuestas de APIs externas de alta frecuencia (como catálogos de bancos o sucursales de recaudo).
 
-### 3. Capa BFF (Backend for Frontend)
-Desacopla la lógica de presentación de la lógica de negocio core:
-*   **Propósito**: Agregación de servicios y traducción de protocolos. Por ejemplo, si la App móvil necesita cargar información consolidada de Cuentas, Contratos de Gas e Historial de Pagos, realiza una sola petición al BFF, y este se encarga de llamar a los microservicios correspondientes de forma paralela.
-*   **Tecnología**: GraphQL o APIs REST ligeras escritas en Node.js, Go o Java Spring Boot.
+### Capa de Servicios de Negocio y Nueva Capa de Monetización
+*   **Motor de Riesgo (Scoring Síncrono)**: Para procesos de pre-aprobación y aprobación en línea de créditos, el Motor de Riesgo se comunica de forma síncrona con el **Buró de Crédito Externo (Datacrédito / TransUnion)**. Esto permite tomar decisiones en milisegundos sin depender de una cola de mensajería.
+*   **Pasarela de Pagos (PSE / Recaudo)**: Conexión síncrona inicial con las redes de pago (ACH / Redeban) para el flujo de autorización inmediato. El resultado final del pago se gestiona mediante callbacks/webhooks asíncronos.
+*   **Capa de Monetización (Valor Agregado)**:
+    *   *Servicio de Buró Propio Vanti*: Alimentado del historial interno de comportamiento de pago de facturas de Gas e histórico de comportamiento crediticio No Gas de Vanti, complementado con datos del buró externo. Genera un score propio altamente predictivo que puede ser consultado por aliados externos B2B.
+    *   *API KYC Aliados*: Expone el autorizador de biometría y validación de identidad a comercios y portales aliados mediante el cobro de una tarifa por consumo (API-led monetization).
 
-### 4. Capa de Integración Orientada a Eventos (Backbone / Event Bus)
-El corazón de la comunicación asíncrona y reactiva del ecosistema:
-*   **Desacoplamiento Transaccional**: Evita integraciones síncronas punto a punto. Cuando una HU o un servicio realiza una acción (Ej: "Pago Recibido"), no llama directamente a SAP o a Estados de Cuenta; publica el evento `pago.procesado` en el bus de eventos.
-*   **Tecnología**: Apache Kafka (para alto rendimiento de streaming de eventos) o RabbitMQ/AWS EventBridge para colas estándares.
-*   **Garantías**: Mecanismos de reintentos (Dead Letter Queues - DLQ) e idempotencia para evitar duplicación de transacciones.
-
-### 5. Capa de Microservicios Core de Negocio
-Servicios modulares con bases de datos independientes (patrón *Database per Service*) para garantizar resiliencia:
-*   **Core Bancario**: Ledger financiero y saldos de cuentas de ahorro/crédito.
-*   **Motor de Riesgo (Scoring)**: Consume reglas de negocio y perfilamiento crediticio (on-premise o cloud).
-*   **Biometría & KYC**: Validación facial de identidad contra registradurías o bases nacionales.
-*   **Pasarela de Pagos (Recaudo)**: Integración segura con PSE, redes de tarjetas de crédito y corresponsales bancarios.
-*   **CRM / Cliente 360**: Vista unificada que conecta el ID de contrato de gas con el ID de cliente de consumo No Gas.
-
-### 6. Capa de Orquestación de Procesos (BPM)
-Maneja transacciones distribuidas de larga duración (Saga Pattern):
-*   **Propósito**: Unificar flujos complejos como la **Originación de Crédito** (Originación ➔ Validación Identidad ➔ Scoring de Riesgo ➔ Firma de Pagaré ➔ Desembolso).
-*   **Tecnología**: Motores ligeros como Camunda (BPMN 2.0) o Temporal.io, que garantizan la consistencia del flujo de trabajo, compensaciones ante fallos y trazabilidad del estado.
-
-### 7. Capa de Sistemas de Registro, Analítica y Notificaciones
-*   **Estados de Cuenta**: Módulo optimizado para lectura y generación masiva de PDF/consulta en línea para clientes.
-*   **SAP / Libro Mayor**: Contabilidad oficial corporativa de Vanti S.A. ESP. Integración asíncrona mediante mensajes RFC/IDoc para no sobrecargar el ERP transaccional.
-*   **Data Lake**: Almacena datos crudos e históricos para modelos de analítica, comportamiento de mora, tableros predictivos de riesgo y el portal del CTO.
-*   **Notificaciones**: Envío automático de confirmaciones transaccionales vía WhatsApp, SMS, push e-mail.
+### Capa Transversal Asincrónica (Backbone de Eventos Kafka / RabbitMQ)
+*   *Ubicación*: Transversal a todo el sistema.
+*   *Justificación*: El Event Bus no es un componente horizontal que deba bloquear el flujo síncrono cliente-servidor. Funciona de manera paralela e integradora.
+*   *Operaciones Desacopladas (Event-Driven & Batch)*:
+    *   **Estados de Cuenta y Facturación**: Al procesarse un pago o cerrarse un ciclo de facturación, se emite un evento al Bus. El generador de Estados de Cuenta consume este evento y genera el documento en lote (batch) asíncronamente.
+    *   **SAP / Contabilidad Oficial**: Las HUs y el BPM emiten eventos de cambios de estado financiero. El conector SAP consume estos eventos y realiza la journalización contable de manera asíncrona mediante colas de persistencia, aislando al Core Bancario de la velocidad del ERP contable.
+    *   **Notificaciones**: El orquestador BPM **nunca llama directamente al motor de notificaciones**. En su lugar, el BPM publica el evento `alert.trigger` en el Event Bus. El Motor de Notificaciones (transversal) reacciona a este evento, lee el canal preferido del cliente (WhatsApp, SMS, Email) y hace la entrega a través del proveedor externo (Twilio/AWS SNS) de manera asincrónica.
 
 ---
 
-## 🔌 3. Patrones de Integración y Flujo de Datos
+## 🔌 3. Flujos de Transacción Integrados
 
-Para asegurar alta resiliencia y escalabilidad, la arquitectura utiliza tres patrones de integración principales:
-
+### Ejemplo: Solicitud y Originación de Crédito No Gas
 ```
-[Cliente] ──(Síncrono REST)──> [BFF / Microservicio] ──(Asíncrono Eventos)──> [Kafka / Broker] ──(Suscriptor)──> [Libro Mayor / ERP]
+[Cliente] ──(1. Síncrono)──> [API GW & Capa Media]  (Autenticación Biométrica Síncrona ➔ Token JWT)
+   │
+[BFF] ─────(2. Síncrono)──> [Motor Riesgo / Buró]  (Scoring en Tiempo Real contra Datacrédito)
+   │
+[BPM] ─────(3. Síncrono)──> [Core Bancario / CRM]  (Apertura de Cuenta y Registro Cliente)
+   │
+[BPM] ─────(4. Asíncrono)─> [Event Bus (Kafka)] ──> [SAP] (Asiento Contable Asíncrono)
+                                        │
+                                        └─────────> [Notificaciones] ──> [WhatsApp] ("Crédito Desembolsado")
 ```
-
-1.  **Asíncrono Orientado a Eventos (Publish-Subscribe)**:
-    *   *Uso*: Notificaciones, actualización de estados de cuenta, journalización en SAP y analítica.
-    *   *Ventaja*: Si el ERP (SAP) se encuentra en mantenimiento técnico off-line, el evento queda en cola en el Bus de Eventos. Una vez que SAP vuelve a estar disponible, procesa las transacciones pendientes sin que el cliente final experimente caídas en el Portal o la App.
-2.  **Síncrono REST / gRPC (Request-Response)**:
-    *   *Uso*: Validaciones inmediatas que requieren respuesta en tiempo real (Autenticación IAM, Scoring crítico inmediato, Consulta de saldo en Core Bancario).
-3.  **Lotes por Lotes (Batch ETL)**:
-    *   *Uso*: Sincronización nocturna de estados de cuenta de facturación Gas y No Gas, e ingesta de datos agregados hacia el Data Lake para el cierre financiero mensual.
-
----
-
-## 🔒 4. Estrategia de Infraestructura Agnóstica a la Nube
-
-Para garantizar que el ecosistema pueda operar de forma idéntica en AWS, Azure, Google Cloud o en servidores propios (On-Premise), se aplican las siguientes directrices de infraestructura:
-
-1.  **Contenedores y Orquestación (Kubernetes - K8s)**:
-    *   Todos los microservicios se despliegan en contenedores Docker y son administrados por Kubernetes. Esto permite migrar el clúster de nubes (EKS en AWS, AKS en Azure, GKE en GCP o clúster físico) sin modificar una sola línea de código.
-2.  **Bases de Datos Desacopladas**:
-    *   Uso de bases de datos relacionales estándar (PostgreSQL) y no relacionales (Redis/MongoDB) que cuentan con soporte administrado en cualquier nube o instalación local de Linux.
-3.  **Infraestructura como Código (IaC)**:
-    *   Definición de toda la red, clústeres, colas y almacenamiento a través de scripts de **Terraform**, permitiendo levantar la infraestructura completa del ecosistema financiero en minutos de forma replicable y automatizada.
+1.  **Autenticación y KYC (Síncrono)**: El cliente realiza la validación biométrica en la App. La **Capa Media** valida síncronamente contra la Registraduría y el IAM genera un token JWT.
+2.  **Scoring e Inteligencia (Síncrono)**: El BFF invoca al Motor de Riesgo que consume síncronamente el Buró Externo para dar una pre-aprobación del crédito en segundos.
+3.  **Registro y Creación (Síncrono)**: El orquestador **BPM** coordina síncronamente la creación de la cuenta en el Core Bancario y el registro en el CRM.
+4.  **Cierre y Registro Contable (Asíncrono)**: Una vez desembolsado el dinero, el BPM publica un evento de transacción exitosa en el **Event Bus (Capa Transversal)**.
+    *   El suscriptor de **SAP** toma el evento y genera el registro contable.
+    *   El suscriptor de **Notificaciones** toma el evento y dispara un WhatsApp automático de felicitación al cliente.
+    *   El suscriptor de **Data Lake** ingesta los datos en tiempo real para actualizar el panel de control del CTO.

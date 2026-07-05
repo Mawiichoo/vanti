@@ -4,111 +4,155 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        
-        <!-- Channels Row (Y=50) -->
-        <mxCell id="c1" value="📱 App Móvil&#xa;(iOS / Android)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=12;fontStyle=1" parent="1" vertex="1">
+
+        <!-- ==================== LAYER 1: CHANNELS (Y=50) ==================== -->
+        <mxCell id="c1" value="📱 App Móvil&#xa;(iOS / Android)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="150" y="50" width="130" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="c2" value="💻 Portal Web&#xa;(Gas / No Gas)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=12;fontStyle=1" parent="1" vertex="1">
+        <mxCell id="c2" value="💻 Portal Web&#xa;(Gas / No Gas)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="320" y="50" width="130" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="c3" value="🤝 Portales Aliados&#xa;(Ecosistemas B2B)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=12;fontStyle=1" parent="1" vertex="1">
+        <mxCell id="c3" value="🤝 Portales Aliados&#xa;(Ecosistemas B2B)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="490" y="50" width="130" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="c4" value="📞 Call Center&#xa;(IVR / Asesores)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=12;fontStyle=1" parent="1" vertex="1">
+        <mxCell id="c4" value="📞 Call Center&#xa;(IVR / Asesores)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="660" y="50" width="130" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="c5" value="🏢 Oficinas Vanti&#xa;(Atención / Cajas)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=12;fontStyle=1" parent="1" vertex="1">
+        <mxCell id="c5" value="🏢 Oficinas Vanti&#xa;(Atención / Cajas)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="830" y="50" width="130" height="50" as="geometry" />
         </mxCell>
 
-        <!-- API Gateway & Security Layer (Y=140) -->
-        <mxCell id="apigw" value="🛡️ CAPA DE ACCESO, SEGURIDAD &amp; IDENTIDAD (API GATEWAY / IAM)&#xa;WAF | OAuth2 / OIDC | JWT | MFA | Control de Tráfico | Reverse Proxy (Apigee / AWS API GW)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=rgba(251,192,45,0.1);strokeColor=#FBC02D;fontColor=#FBC02D;strokeWidth=2;fontSize=12;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="150" y="140" width="810" height="60" as="geometry" />
+        <!-- ==================== LAYER 2: SECURITY & GATEWAY (Y=130) ==================== -->
+        <mxCell id="apigw" value="🛡️ CAPA DE ACCESO, SEGURIDAD &amp; PERÍMETRO (API GATEWAY &amp; WAF)&#xa;WAF | Control de Tráfico | Reverse Proxy (Apigee / Kong / AWS API Gateway)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=rgba(251,192,45,0.08);strokeColor=#FBC02D;fontColor=#FBC02D;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="150" y="130" width="810" height="50" as="geometry" />
         </mxCell>
 
-        <!-- BFF Experience Layer (Y=240) -->
-        <mxCell id="bff" value="📱 CAPA BFF (BACKEND FOR FRONTEND / API EXPERIENCE)&#xa;BFF Móvil | BFF Web | BFF Aliados | Orquestación Ligera &amp; Agregación (GraphQL / Node.js / Go)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=12;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="150" y="240" width="810" height="60" as="geometry" />
+        <!-- ==================== LAYER 3: CAPA MEDIA / SEGURIDAD Y AUTH (Y=200) ==================== -->
+        <mxCell id="media" value="🔑 CAPA MEDIA (AUTORIZADOR, GESTOR DE ROLES, IDENTITY MANAGER &amp; KYC)&#xa;IAM (Keycloak / Okta) | Gestor de Roles | Biometría &amp; Validación de Identidad Síncrona" style="rounded=1;whiteSpace=wrap;html=1;fillColor=rgba(251,192,45,0.15);strokeColor=#FBC02D;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="150" y="200" width="810" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Event Bus & Integration layer (Y=340) -->
-        <mxCell id="bus" value="⚡ BACKBONE DE INTEGRACIÓN ORIENTADO A EVENTOS (EVENT BUS / MESSAGE BROKER)&#xa;Event-Driven Architecture | Broker de Mensajería de Alta Velocidad (Kafka / RabbitMQ / EventBridge)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=rgba(2,132,199,0.15);strokeColor=#0284c7;fontColor=#F8FAFC;strokeWidth=2;fontSize=12;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="150" y="340" width="810" height="60" as="geometry" />
+        <!-- ==================== LAYER 4: BFF & CACHE (Y=270) ==================== -->
+        <mxCell id="bff" value="📱 CAPA BFF (BACKEND FOR FRONTEND / API EXPERIENCE)&#xa;Orquestación de Experiencia y Agregación de Consultas Síncronas (Node.js / Go / GraphQL)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="150" y="270" width="590" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cache" value="💾 MEMORIA EN CACHÉ&#xa;Sesiones &amp; Carga Rápida&#xa;(Redis / Memcached)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=rgba(2,132,199,0.1);strokeColor=#0284c7;fontColor=#0284c7;strokeWidth=1.5;fontSize=10;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="760" y="270" width="200" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Core Financial Microservices Grid (Y=440) -->
-        <mxCell id="core" value="🏦 Core Bancario&#xa;(Transaccional / Cuentas)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="150" y="440" width="138" height="60" as="geometry" />
+        <!-- ==================== LAYER 5: CORE & BUSINESS SERVICES (Y=350) ==================== -->
+        <mxCell id="core" value="🏦 Core Bancario&#xa;(Ledger / Cuentas)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="150" y="350" width="120" height="50" as="geometry" />
         </mxCell>
         <mxCell id="risk" value="📊 Motor de Riesgo&#xa;(Scoring / Buró)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="318" y="440" width="138" height="60" as="geometry" />
+          <mxGeometry x="290" y="350" width="120" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="biom" value="👤 Biometría &amp; KYC&#xa;(Enrolamiento / Rostro)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="486" y="440" width="138" height="60" as="geometry" />
+        <mxCell id="pay" value="💳 Pasarela Pagos&#xa;(PSE / Recaudo)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="430" y="350" width="120" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="pay" value="💳 Pasarela Pagos&#xa;(PSE / Tarjetas / Recaudo)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="654" y="440" width="138" height="60" as="geometry" />
+        <mxCell id="crm" value="👥 CRM / Cliente 360&#xa;(Gas y No Gas)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="570" y="350" width="120" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="crm" value="👥 CRM / Cliente 360&#xa;(Gas + No Gas Unified)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="822" y="440" width="138" height="60" as="geometry" />
-        </mxCell>
-
-        <!-- Process Orchestration BPM Layer (Y=540) -->
-        <mxCell id="bpm" value="⚙️ MOTOR DE ORQUESTACIÓN DE PROCESOS (BPM / WORKFLOW ENGINE)&#xa;Gestión de Ciclo de Vida: Solicitud ➔ Scoring ➔ Validación Identidad ➔ Aprobación ➔ Desembolso (Camunda / Temporal)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=rgba(16,185,129,0.1);strokeColor=#10b981;fontColor=#10b981;strokeWidth=2;fontSize=12;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="150" y="540" width="810" height="60" as="geometry" />
+        <mxCell id="money" value="💰 Capa Monetización&#xa;Buro Vanti | KYC Aliados" style="rounded=1;whiteSpace=wrap;html=1;fillColor=rgba(16,185,129,0.1);strokeColor=#10b981;fontColor=#10b981;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="710" y="350" width="250" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Records & Insights Layer (Y=640) -->
-        <mxCell id="esta" value="📄 Estados de Cuenta&#xa;(Gas y No Gas Individual)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="150" y="640" width="240" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="sap" value="💼 SAP / Libro Mayor&#xa;(Contabilidad Corporativa)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="435" y="640" width="240" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="lake" value="🗄️ Data Lake / Analítica&#xa;(BI / Scoring Predictivo / CTO Panel)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="720" y="640" width="240" height="60" as="geometry" />
+        <!-- ==================== LAYER 6: PROCESS ORCHESTRATION BPM (Y=430) ==================== -->
+        <mxCell id="bpm" value="⚙️ MOTOR DE ORQUESTACIÓN DE PROCESOS (BPM / WORKFLOW ENGINE)&#xa;Orquestación de Negocio Síncrona/Asíncrona (Originación ➔ Aprobación ➔ Desembolso) (Camunda / Temporal)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=rgba(16,185,129,0.1);strokeColor=#10b981;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="150" y="430" width="810" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Cross-cutting Capabilities (Y=740) -->
-        <mxCell id="notif" value="✉️ MOTOR DE NOTIFICACIONES MULTICANAL&#xa;Email | WhatsApp | SMS | Push Notifications (Twilio / Firebase)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#94A3B8;strokeWidth=1;fontSize=10;fontStyle=1;dashed=1" parent="1" vertex="1">
-          <mxGeometry x="150" y="740" width="390" height="50" as="geometry" />
+        <!-- ==================== LAYER 7: SYSTEMS OF RECORD & ANALYTICS (Y=510) ==================== -->
+        <mxCell id="esta" value="📄 Estados de Cuenta&#xa;(Generación Batch)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="150" y="510" width="240" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="obs" value="🔍 OBSERVABILIDAD, GOBIERNO &amp; AUDITORÍA (APM)&#xa;Trazabilidad Distribuida | Métrica | Logs | Telemetría (OpenTelemetry / Grafana / ELK)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#94A3B8;strokeWidth=1;fontSize=10;fontStyle=1;dashed=1" parent="1" vertex="1">
-          <mxGeometry x="570" y="740" width="390" height="50" as="geometry" />
+        <mxCell id="sap" value="💼 SAP / Libro Mayor&#xa;(Contabilidad Asíncrona)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="435" y="510" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lake" value="🗄️ Data Lake / Analítica&#xa;(BI / Scoring de Datos)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="720" y="510" width="240" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Connectors: Channels to API Gateway -->
-        <mxCell id="ec1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FBC02D;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;" parent="1" source="c1" target="apigw" />
-        <mxCell id="ec2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FBC02D;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;" parent="1" source="c2" target="apigw" />
-        <mxCell id="ec3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FBC02D;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;" parent="1" source="c3" target="apigw" />
-        <mxCell id="ec4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FBC02D;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;" parent="1" source="c4" target="apigw" />
-        <mxCell id="ec5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FBC02D;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;" parent="1" source="c5" target="apigw" />
+        <!-- ==================== LAYER 8: CROSS-CUTTING ASYNC LAYER (Y=600) ==================== -->
+        <mxCell id="bus" value="⚡ BACKBONE DE EVENTOS (EVENT BUS / MESSAGE BROKER ASÍNCRONO)&#xa;Transversal Asíncrono de Desacoplamiento (Kafka / RabbitMQ)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=rgba(2,132,199,0.15);strokeColor=#0284c7;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="150" y="600" width="380" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="notif" value="✉️ Notificaciones Multicanal&#xa;Email / WhatsApp / SMS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="560" y="600" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="obs" value="🔍 Observabilidad &amp; APM&#xa;Logs / OpenTelemetry" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#334155;fontColor=#F8FAFC;strokeWidth=2;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="780" y="600" width="180" height="50" as="geometry" />
+        </mxCell>
 
-        <!-- API GW to BFF -->
-        <mxCell id="e_apigw_bff" value="Auth Check &amp; Proxy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;fontColor=#94A3B8;fontSize=10;" parent="1" source="apigw" target="bff" />
+        <!-- ==================== EXTERNAL PROVIDERS LAYER (X=1000) ==================== -->
+        <mxCell id="ext_auth" value="🌐 Registraduría /&#xa;Base Identidad Nacional" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f172a;strokeColor=#94A3B8;fontColor=#94A3B8;strokeWidth=1.5;fontSize=10;dashed=1" parent="1" vertex="1">
+          <mxGeometry x="1000" y="200" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_buro" value="🏢 Centrales de Riesgo&#xa;(Datacrédito / TransUnion)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f172a;strokeColor=#94A3B8;fontColor=#94A3B8;strokeWidth=1.5;fontSize=10;dashed=1" parent="1" vertex="1">
+          <mxGeometry x="1000" y="350" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_pay" value="🏦 Redes Recaudo / PSE&#xa;(ACH / Redeban)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f172a;strokeColor=#94A3B8;fontColor=#94A3B8;strokeWidth=1.5;fontSize=10;dashed=1" parent="1" vertex="1">
+          <mxGeometry x="1000" y="430" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_notif" value="📱 API WhatsApp / SMS&#xa;(Twilio / Proveedores)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f172a;strokeColor=#94A3B8;fontColor=#94A3B8;strokeWidth=1.5;fontSize=10;dashed=1" parent="1" vertex="1">
+          <mxGeometry x="1000" y="600" width="140" height="50" as="geometry" />
+        </mxCell>
 
-        <!-- BFF to Event Bus -->
-        <mxCell id="e_bff_bus" value="Event Pub / API Req" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;fontColor=#94A3B8;fontSize=10;" parent="1" source="bff" target="bus" />
+        <!-- ==================== CONNECTOR LINES (edge="1") ==================== -->
+        <!-- Channels to Gateway -->
+        <mxCell id="ec1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FBC02D;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;" parent="1" source="c1" target="apigw" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FBC02D;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;" parent="1" source="c2" target="apigw" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FBC02D;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;" parent="1" source="c3" target="apigw" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FBC02D;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;" parent="1" source="c4" target="apigw" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FBC02D;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;" parent="1" source="c5" target="apigw" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- Event Bus to Core Services (Down arrows) -->
-        <mxCell id="eb1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="bus" target="core" />
-        <mxCell id="eb2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="bus" target="risk" />
-        <mxCell id="eb3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="bus" target="biom" />
-        <mxCell id="eb4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="bus" target="pay" />
-        <mxCell id="eb5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="bus" target="crm" />
+        <!-- API GW to Media (IAM/Biometria) -->
+        <mxCell id="e_gw_med" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FBC02D;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;" parent="1" source="apigw" target="media" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Media (Biometria) to Ext Identidad (Sync Validation) -->
+        <mxCell id="e_med_ext" value="Sync KYC" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FBC02D;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="media" target="ext_auth" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Media to BFF -->
+        <mxCell id="e_med_bff" value="JWT Token" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;fontColor=#94A3B8;fontSize=9;" parent="1" source="media" target="bff" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- BFF to Cache -->
+        <mxCell id="e_bff_cache" value="Session" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#0284c7;fontSize=9;" parent="1" source="bff" target="cache" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- BFF to Risk (Sync Credit Check) -->
+        <mxCell id="e_bff_risk" value="Sync Score" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="bff" target="risk" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Risk to Ext Buro (Sync API) -->
+        <mxCell id="e_risk_ext" value="Query Bureau" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F8FAFC;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="risk" target="ext_buro" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- BFF to Core Services (REST Sync Calls) -->
+        <mxCell id="e_bff_core" value="REST" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="bff" target="core" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_bff_pay" value="REST" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="bff" target="pay" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_bff_crm" value="REST" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="bff" target="crm" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_bff_money" value="REST" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="bff" target="money" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Pagos to External Networks -->
+        <mxCell id="e_pay_ext" value="PSE/ACH" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F8FAFC;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="pay" target="ext_pay" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
         <!-- Core Services to BPM Orquestador -->
-        <mxCell id="ebpm1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#10b981;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="core" target="bpm" />
-        <mxCell id="ebpm2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#10b981;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="risk" target="bpm" />
-        <mxCell id="ebpm3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#10b981;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="biom" target="bpm" />
-        <mxCell id="ebpm4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#10b981;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="pay" target="bpm" />
-        <mxCell id="ebpm5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#10b981;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="crm" target="bpm" />
+        <mxCell id="ebpm1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#10b981;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="core" target="bpm" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ebpm2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#10b981;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="risk" target="bpm" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ebpm3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#10b981;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="pay" target="bpm" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ebpm4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#10b981;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;" parent="1" source="crm" target="bpm" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- BPM to records & Analytics -->
-        <mxCell id="epc1" value="Update Ledger / Statement" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#10b981;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;fontColor=#94A3B8;fontSize=10;" parent="1" source="bpm" target="esta" />
-        <mxCell id="epc2" value="Async Journalization" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#10b981;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;fontColor=#94A3B8;fontSize=10;" parent="1" source="bpm" target="sap" />
-        <mxCell id="epc3" value="Ingestion / ETL" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#10b981;strokeWidth=2;fillColor=none;endArrow=classic;endSize=6;fontColor=#94A3B8;fontSize=10;" parent="1" source="bpm" target="lake" />
+        <!-- Core / BPM to Event Bus (Async Broker) -->
+        <mxCell id="e_core_bus" value="Pub Event" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;dashed=1;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="core" target="bus" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_bpm_bus" value="Pub State Change" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;dashed=1;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="bpm" target="bus" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Event Bus to Record Systems (Async Consumers) -->
+        <mxCell id="e_bus_esta" value="Gen Account Doc (Batch)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="bus" target="esta" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_bus_sap" value="Post Entry (Async)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="bus" target="sap" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_bus_lake" value="Stream Ingest" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="bus" target="lake" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Event Bus to Notifications (Async Queue) -->
+        <mxCell id="e_bus_notif" value="Trigger Alerts" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0284c7;strokeWidth=1.5;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="bus" target="notif" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Notifications to Ext API -->
+        <mxCell id="e_notif_ext" value="SMS/WhatsApp API" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#94A3B8;strokeWidth=1.5;dashed=1;fillColor=none;endArrow=classic;endSize=5;fontColor=#94A3B8;fontSize=9;" parent="1" source="notif" target="ext_notif" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
       </root>
     </mxGraphModel>
