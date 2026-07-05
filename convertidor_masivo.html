@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanti - Convertidor de Backlog Masivo (CSV -> JSON)</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --vanti-yellow: #fbc02d;
+            --vanti-yellow-hover: #f9a825;
+            --vanti-blue: #0284c7;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --color-success: #10b981;
+            --color-danger: #ef4444;
+            --border-radius: 12px;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--vanti-yellow);
+            padding-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .vanti-logo {
+            font-weight: 800;
+            color: var(--vanti-yellow);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .guide-box {
+            background: rgba(2, 132, 199, 0.06);
+            border: 1px solid rgba(2, 132, 199, 0.2);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .guide-box ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .guide-box li {
+            margin-bottom: 0.4rem;
+        }
+
+        .grid-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        textarea {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8rem;
+            padding: 1rem;
+            height: 320px;
+            resize: none;
+            outline: none;
+            transition: border-color var(--transition-speed);
+        }
+
+        textarea:focus {
+            border-color: var(--vanti-blue);
+        }
+
+        .file-drop-zone {
+            border: 2px dashed var(--glass-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            background: rgba(255,255,255,0.01);
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            margin-bottom: 1.5rem;
+        }
+
+        .file-drop-zone:hover, .file-drop-zone.dragover {
+            border-color: var(--vanti-yellow);
+            background: rgba(251, 192, 45, 0.03);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            background: var(--bg-tertiary);
+            color: var(--text-main);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all var(--transition-speed);
+        }
+
+        .btn-primary {
+            background: var(--vanti-yellow);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--vanti-yellow-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--vanti-blue);
+            color: var(--vanti-blue);
+        }
+
+        .btn-outline:hover {
+            background: rgba(2, 132, 199, 0.08);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .preview-box {
+            background: rgba(16, 185, 129, 0.04);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .preview-box.error {
+            background: rgba(239, 68, 68, 0.04);
+            border-color: rgba(239, 68, 68, 0.15);
+        }
+
+        .preview-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .success-text { color: var(--color-success); }
+        .danger-text { color: var(--color-danger); }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 0.8rem;
+        }
+
+        .stat-item {
+            background: rgba(0,0,0,0.2);
+            padding: 0.6rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><span class="vanti-logo">vanti.</span> Convertidor de Backlog Masivo</h1>
+    <div class="subtitle">Herramienta offline de conversión rápida para estructurar proyectos, épicas e historias en lote.</div>
+
+    <div class="guide-box">
+        <h3>💡 Instrucciones de Uso con Excel:</h3>
+        <ul>
+            <li>Crea tus columnas en Excel exactamente en el orden del archivo <strong>backlog_carga_masiva.csv</strong>.</li>
+            <li>Guarda tu hoja de cálculo como archivo <strong>CSV (delimitado por comas)</strong> o copia las celdas directamente.</li>
+            <li>Para múltiples <em>Criterios de Aceptación</em> o <em>Tareas Técnicas</em> en una misma HU, escríbelos separados por la barra vertical <strong>|</strong> (Ej: <code>Criterio 1 | Criterio 2 | Criterio 3</code>).</li>
+            <li>Sube el archivo CSV o pega el contenido texto abajo, presiona <strong>Convertir</strong>, descarga el archivo <strong>data.json</strong> y reemplaza el original en tu carpeta de proyecto.</li>
+        </ul>
+    </div>
+
+    <div class="file-drop-zone" id="drop-zone">
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="var(--text-muted)" style="margin-bottom: 0.5rem;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+        <p style="font-weight: 600; font-size: 0.9rem;">Arrastra y suelta tu archivo .csv aquí</p>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">o haz clic para explorar en tu equipo</p>
+        <input type="file" id="csv-file-input" accept=".csv" style="display: none;">
+    </div>
+
+    <div class="grid-columns">
+        <div class="col">
+            <label for="csv-input">Contenido CSV (Entrada)</label>
+            <textarea id="csv-input" placeholder="ProjectCode,ProjectName,ProjectDesc,ProjectPlannedStart,ProjectPlannedEnd,ProjectActualStart,ProjectActualEnd,EpicId,EpicName,EpicDesc,EpicPlannedStart,EpicPlannedEnd,EpicActualStart,EpicActualEnd,HUId,HUName,HUDesc,HUPlannedStart,HUPlannedEnd,HUActualStart,HUActualEnd,HUPlannedCost,HUActualCost,HUDependency,HUIsCritical,HUIsMVP,AcceptanceCriteria,TechnicalTasks&#10;CORE,Core Bancario,Motor principal...,2026-07-01,2026-11-15,2026-07-01,2026-11-20,CORE-EP-01,Arquitectura...,...,2026-07-01,2026-10-20,2026-07-01,2026-10-27,CORE-HU-01,Base de datos...,...,2026-07-01,2026-07-15,2026-07-01,2026-07-18,45.0,50.0,,TRUE,TRUE,Modelar tablas|Crear indexación,Configurar docker postgres"></textarea>
+        </div>
+        <div class="col">
+            <label for="json-output">Resultado JSON (Salida)</label>
+            <textarea id="json-output" placeholder="Aquí aparecerá el formato JSON resultante..." readonly></textarea>
+        </div>
+    </div>
+
+    <div class="btn-row">
+        <button class="btn btn-primary" id="btn-convert">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 8l-4 4h3c0 3.31-2.69 6-6 6-1.01 0-1.97-.25-2.8-.7l-1.46 1.46C8.97 19.54 10.43 20 12 20c4.42 0 8-3.58 8-8h3l-4-4zM6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46C15.03 4.46 13.57 4 12 4c-4.42 0-8 3.58-8 8H1l4 4 4-4H6z"/></svg>
+            Convertir Datos
+        </button>
+        <button class="btn btn-outline" id="btn-download" disabled>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Descargar data.json
+        </button>
+        <button class="btn btn-outline" id="btn-copy" disabled>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            Copiar al Portapapeles
+        </button>
+    </div>
+
+    <div class="preview-box" id="preview-panel">
+        <div class="preview-title" id="preview-status">
+            <!-- Dynamic Status -->
+        </div>
+        <div class="stat-grid" id="stat-grid">
+            <div class="stat-item">
+                <div class="stat-num" id="stat-projects">0</div>
+                <div class="stat-label">Proyectos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num" id="stat-epics">0</div>
+                <div class="stat-label">Épicas</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num" id="stat-hus">0</div>
+                <div class="stat-label">Historias (HUs)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const dropZone = document.getElementById("drop-zone");
+    const fileInput = document.getElementById("csv-file-input");
+    const csvInput = document.getElementById("csv-input");
+    const jsonOutput = document.getElementById("json-output");
+    const btnConvert = document.getElementById("btn-convert");
+    const btnDownload = document.getElementById("btn-download");
+    const btnCopy = document.getElementById("btn-copy");
+    const previewPanel = document.getElementById("preview-panel");
+    const previewStatus = document.getElementById("preview-status");
+
+    let lastResultJSON = null;
+
+    // Drop zone handlers
+    dropZone.addEventListener("click", () => fileInput.click());
+    
+    fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) loadFile(file);
+    });
+
+    dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("dragover");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("dragover");
+    });
+
+    dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("dragover");
+        const file = e.dataTransfer.files[0];
+        if (file) loadFile(file);
+    });
+
+    function loadFile(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            csvInput.value = e.target.result;
+            showStatus("success", `Archivo "${file.name}" cargado exitosamente. Haz clic en 'Convertir Datos'.`);
+        };
+        reader.readAsText(file, "UTF-8");
+    }
+
+    btnConvert.addEventListener("click", () => {
+        const csvText = csvInput.value.trim();
+        if (!csvText) {
+            showStatus("error", "Error: El contenido CSV está vacío. Pega datos o arrastra un archivo.");
+            return;
+        }
+
+        try {
+            const data = convertCSVToJSON(csvText);
+            if (!data || data.projects.length === 0) {
+                throw new Error("No se detectaron cabeceras válidas de proyectos Agile. Valida el formato.");
+            }
+
+            lastResultJSON = JSON.stringify(data, null, 2);
+            jsonOutput.value = lastResultJSON;
+
+            // Stats
+            document.getElementById("stat-projects").textContent = data.projects.length;
+            document.getElementById("stat-epics").textContent = data.epics.length;
+            document.getElementById("stat-hus").textContent = data.hus.length;
+
+            showStatus("success", "¡Conversión realizada con éxito! Listo para descargar o copiar.");
+            btnDownload.removeAttribute("disabled");
+            btnCopy.removeAttribute("disabled");
+            document.getElementById("stat-grid").style.display = "grid";
+        } catch (e) {
+            jsonOutput.value = "";
+            showStatus("error", `Error de Conversión: ${e.message}`);
+            btnDownload.setAttribute("disabled", "true");
+            btnCopy.setAttribute("disabled", "true");
+            document.getElementById("stat-grid").style.display = "none";
+        }
+    });
+
+    btnCopy.addEventListener("click", () => {
+        if (!lastResultJSON) return;
+        navigator.clipboard.writeText(lastResultJSON).then(() => {
+            alert("¡JSON copiado al portapapeles!");
+        });
+    });
+
+    btnDownload.addEventListener("click", () => {
+        if (!lastResultJSON) return;
+        const blob = new Blob([lastResultJSON], { type: "application/json;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "data.json");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+
+    function showStatus(type, msg) {
+        previewPanel.style.display = "block";
+        if (type === "success") {
+            previewPanel.classList.remove("error");
+            previewStatus.innerHTML = `<span class="success-text">✔</span> ${msg}`;
+        } else {
+            previewPanel.classList.add("error");
+            previewStatus.innerHTML = `<span class="danger-text">✘</span> ${msg}`;
+        }
+    }
+
+    // Standard CSV Parser
+    function parseCSV(text) {
+        let lines = [];
+        let row = [""];
+        let inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+            let c = text[i];
+            let next = text[i+1];
+            if (c === '"') {
+                if (inQuotes && next === '"') { row[row.length - 1] += '"'; i++; }
+                else { inQuotes = !inQuotes; }
+            } else if (c === ',' && !inQuotes) {
+                row.push('');
+            } else if ((c === '\r' || c === '\n') && !inQuotes) {
+                if (c === '\r' && next === '\n') { i++; }
+                lines.push(row);
+                row = [''];
+            } else {
+                row[row.length - 1] += c;
+            }
+        }
+        if (row.length > 1 || row[0] !== '') {
+            lines.push(row);
+        }
+        return lines;
+    }
+
+    // CSV to Agile JSON Converter
+    function convertCSVToJSON(csvText) {
+        // Detect semicolon delimiter (commonly used by Excel in Spanish locale)
+        const firstLine = csvText.split('\n')[0];
+        const delimiter = firstLine.includes(';') ? ';' : ',';
+        
+        let rawLines = parseCSV(csvText.trim());
+        if (rawLines.length < 2) return null;
+
+        // If delimiter is semicolon, adjust lines
+        if (delimiter === ';') {
+            rawLines = rawLines.map(row => {
+                if (row.length === 1) {
+                    return row[0].split(';');
+                }
+                return row;
+            });
+        }
+
+        const headers = rawLines[0].map(h => h.trim());
+        
+        let projects = {};
+        let epics = {};
+        let hus = [];
+        
+        for (let i = 1; i < rawLines.length; i++) {
+            const row = rawLines[i];
+            if (row.length < headers.length) continue;
+            
+            let record = {};
+            headers.forEach((header, index) => {
+                record[header] = (row[index] || '').trim();
+            });
+            
+            const projCode = record['ProjectCode'];
+            if (!projCode) continue;
+            
+            // 1. Project
+            if (!projects[projCode]) {
+                projects[projCode] = {
+                    id: projCode,
+                    name: record['ProjectName'] || projCode,
+                    code: projCode,
+                    desc: record['ProjectDesc'] || '',
+                    plannedStartDate: record['ProjectPlannedStart'] || '2026-07-01',
+                    plannedEndDate: record['ProjectPlannedEnd'] || '2026-12-31',
+                    actualStartDate: record['ProjectActualStart'] || '2026-07-01',
+                    actualEndDate: record['ProjectActualEnd'] || '2026-12-31'
+                };
+            }
+            
+            // 2. Epic
+            const epicId = record['EpicId'];
+            if (epicId && !epics[epicId]) {
+                epics[epicId] = {
+                    id: epicId,
+                    projectId: projCode,
+                    name: record['EpicName'] || epicId,
+                    desc: record['EpicDesc'] || '',
+                    plannedStartDate: record['EpicPlannedStart'] || '2026-07-01',
+                    plannedEndDate: record['EpicPlannedEnd'] || '2026-12-31',
+                    actualStartDate: record['EpicActualStart'] || '2026-07-01',
+                    actualEndDate: record['EpicActualEnd'] || '2026-12-31'
+                };
+            }
+            
+            // 3. User Story (HU)
+            const huId = record['HUId'];
+            if (huId) {
+                // ACs list
+                let acList = [];
+                const acRaw = record['AcceptanceCriteria'] || '';
+                if (acRaw) {
+                    const acItems = acRaw.split('|').map(item => item.trim()).filter(Boolean);
+                    acItems.forEach((acText, idx) => {
+                        acList.push({
+                            id: `${huId}-AC-${String(idx + 1).padStart(2, '0')}`,
+                            text: acText,
+                            completed: false,
+                            plannedStartDate: record['HUPlannedStart'] || '2026-07-01',
+                            plannedEndDate: record['HUPlannedEnd'] || '2026-12-31'
+                        });
+                    });
+                }
+                
+                // HTs list
+                let htList = [];
+                const htRaw = record['TechnicalTasks'] || '';
+                if (htRaw) {
+                    const htItems = htRaw.split('|').map(item => item.trim()).filter(Boolean);
+                    htItems.forEach((htText, idx) => {
+                        htList.push({
+                            id: `${huId}-HT-${String(idx + 1).padStart(2, '0')}`,
+                            text: htText,
+                            completed: false,
+                            plannedStartDate: record['HUPlannedStart'] || '2026-07-01',
+                            plannedEndDate: record['HUPlannedEnd'] || '2026-12-31'
+                        });
+                    });
+                }
+                
+                hus.push({
+                    id: huId,
+                    projectId: projCode,
+                    epicId: epicId || "",
+                    name: record['HUName'] || huId,
+                    desc: record['HUDesc'] || '',
+                    state: "To Do",
+                    progress: 0,
+                    plannedCost: parseFloat(record['HUPlannedCost']) || 0.0,
+                    actualCost: parseFloat(record['HUActualCost']) || 0.0,
+                    plannedStartDate: record['HUPlannedStart'] || '2026-07-01',
+                    plannedEndDate: record['HUPlannedEnd'] || '2026-12-31',
+                    actualStartDate: record['HUActualStart'] || '2026-07-01',
+                    actualEndDate: record['HUActualEnd'] || '2026-12-31',
+                    dependency: record['HUDependency'] || '',
+                    isCritical: (record['HUIsCritical'] || '').toUpperCase() === 'TRUE',
+                    isMVP: (record['HUIsMVP'] || '').toUpperCase() === 'TRUE',
+                    acceptanceCriteria: acList,
+                    technicalTasks: htList
+                });
+            }
+        }
+        
+        return {
+            projects: Object.values(projects),
+            epics: Object.values(epics),
+            hus: hus
+        };
+    }
+</script>
+</body>
+</html>
