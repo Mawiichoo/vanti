@@ -613,6 +613,16 @@ function setupEventListeners() {
         }
     });
 
+    document.getElementById("btn-reset-db").addEventListener("click", () => {
+        if (confirm("¿Estás seguro de que deseas restablecer la base de datos desde data.json? Se perderán los cambios manuales.")) {
+            localStorage.removeItem("vanti_projects");
+            localStorage.removeItem("vanti_epics");
+            localStorage.removeItem("vanti_hus");
+            localStorage.removeItem("vanti_simulation");
+            location.reload();
+        }
+    });
+
     document.getElementById("btn-export-json").addEventListener("click", exportDataAsJSON);
 
     const fileInput = document.getElementById("file-import-json");
