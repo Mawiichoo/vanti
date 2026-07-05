@@ -22,24 +22,24 @@ El siguiente modelo conceptual muestra el desacoplamiento de capas y flujos de i
 
 ```mermaid
 graph TD
-    %% Estilos de Nodos
-    classDef channel fill:#1E293B,stroke:#334155,stroke-width:2px,color:#F8FAFC;
-    classDef gate fill:#FBC02D14,stroke:#FBC02D,stroke-width:2px,color:#FBC02D;
-    classDef media fill:#FBC02D2E,stroke:#FBC02D,stroke-width:2px,color:#F8FAFC;
-    classDef bff fill:#1E293B,stroke:#0284c7,stroke-width:2px,color:#F8FAFC;
-    classDef cache fill:#0284C714,stroke:#0284c7,stroke-width:1.5px,color:#0284c7;
-    classDef service fill:#1E293B,stroke:#334155,stroke-width:2px,color:#F8FAFC;
-    classDef monetization fill:#10B98119,stroke:#10b981,stroke-width:2px,color:#10b981;
-    classDef bpm fill:#10B9812E,stroke:#10b981,stroke-width:2px,color:#F8FAFC;
-    classDef cross fill:#1E293B,stroke:#0284c7,stroke-dasharray: 4 4,color:#94A3B8;
-    classDef ext fill:#0F172A,stroke:#94A3B8,stroke-width:1.5px,stroke-dasharray: 5 5,color:#94A3B8;
+    %% Estilos de Nodos Especiales mediante classDef
+    classDef channel fill:#1E293B,stroke:#475569,stroke-width:2.5px,color:#F8FAFC;
+    classDef gate fill:#FBC02D14,stroke:#FBC02D,stroke-width:3px,color:#FBC02D;
+    classDef media fill:#FBC02D2E,stroke:#FBC02D,stroke-width:3px,color:#F8FAFC;
+    classDef bff fill:#1E293B,stroke:#0284c7,stroke-width:3px,color:#F8FAFC;
+    classDef cache fill:#0284C714,stroke:#0284c7,stroke-width:2px,color:#0284c7;
+    classDef service fill:#1E293B,stroke:#475569,stroke-width:2.5px,color:#F8FAFC;
+    classDef monetization fill:#10B98114,stroke:#10b981,stroke-width:2.5px,color:#10b981;
+    classDef bpm fill:#10B9812E,stroke:#10b981,stroke-width:3px,color:#F8FAFC;
+    classDef cross fill:#1E293B,stroke:#0284c7,stroke-width:2.5px,stroke-dasharray: 4 4,color:#E2E8F0;
+    classDef ext fill:#0F172A,stroke:#94A3B8,stroke-width:2px,stroke-dasharray: 5 5,color:#94A3B8;
 
     %% 1. Canales
     subgraph CapaCanales ["📱 Capa de Canales Digitales y Físicos"]
         C1["App Móvil<br>(iOS / Android)"]:::channel
         C2["Portal Web<br>(Gas / No Gas)"]:::channel
         C3["Portales Aliados<br>(B2B APIs)"]:::channel
-        C4["Call Center<br>(IVR / Agentes)"]:::channel
+        C4["Call Center<br>(IVR / Asesores)"]:::channel
         C5["Oficinas Vanti<br>(Cajas / Asesores)"]:::channel
     end
 
@@ -63,38 +63,49 @@ graph TD
         S_RISK["Motor de Riesgo<br>(Scoring / Decisión)"]:::service
         S_PAY["Pasarela de Pagos<br>(PSE / Recaudo / Tarjetas)"]:::service
         S_CRM["CRM / Cliente 360<br>(Gas & No Gas Unified)"]:::service
-        
-        %% Monetización
         S_MONEY["💰 Capa Monetización<br>(Servicio Buró Vanti / API KYC Aliados)"]:::monetization
     end
 
     %% 6. Orquestación BPM
     BPM["⚙️ Orquestador de Procesos (BPM Engine)<br>(Camunda / Temporal - Saga: Originación ➔ Scoring ➔ Desembolso)"]:::bpm
 
-    %% 7. Sistemas de Registro
-    subgraph RecordSystems ["💼 Capa de Sistemas de Registro y Analytics"]
+    %% 7. Capa Transversal (Asincrónica)
+    subgraph CapaTransversal ["⚡ Capa Transversal Asincrónica (Event Bus)"]
+        EVB["Event Bus (Kafka / RabbitMQ)<br>(Messaging Backbone)"]:::cross
+        NOTIF["✉️ Motor Notificaciones<br>(Email / WhatsApp / SMS)"]:::cross
+    end
+
+    %% 8. Sistemas de Registro
+    subgraph RecordSystems ["💼 Capa de Registro Contable y Analytics"]
         R_ESTA["Estados de Cuenta<br>(Generación Batch)"]:::service
         R_SAP["SAP / Libro Mayor<br>(Contabilidad Corporativa)"]:::service
         R_LAKE["Data Lake / Analítica<br>(BI / Scoring de Datos)"]:::service
     end
 
-    %% 8. Capa Transversal (Asincrónica)
-    subgraph CapaTransversal ["⚡ Capa Transversal Asincrónica"]
-        EVB["Event Bus (Kafka / RabbitMQ)<br>(Messaging Backbone)"]:::cross
-        NOTIF["✉️ Motor Notificaciones<br>(Email / WhatsApp / SMS)"]:::cross
-        OBS["🔍 Observabilidad & APM<br>(OpenTelemetry / Grafana)"]:::cross
+    %% 9. Observabilidad APM
+    OBS["🔍 Observabilidad & APM<br>(OpenTelemetry / Grafana)"]:::cross
+
+    %% 10. Proveedores Externos Localizados
+    subgraph ExtMedia ["🌐 Proveedores Externos - Seguridad"]
+        EXT_AUTH["Registraduría Nacional<br>(Bases de Identidad)"]:::ext
     end
 
-    %% 9. Proveedores Externos
-    subgraph ExtProviders ["🌐 Proveedores Externos Edge"]
-        EXT_AUTH["Registraduría Nacional<br>(Bases de Identidad)"]:::ext
+    subgraph ExtServicios ["🌐 Proveedores Externos - Core"]
         EXT_BURO["Centrales de Riesgo<br>(Datacrédito / TransUnion)"]:::ext
         EXT_PAY["Redes Recaudo / PSE<br>(ACH / Redeban)"]:::ext
+    end
+
+    subgraph ExtCanal ["🌐 Proveedores Externos - Canales"]
         EXT_NOT["Gateway WhatsApp/SMS<br>(Twilio / AWS SNS)"]:::ext
     end
 
-    %% Flujos de Integración Síncronos (REST / gRPC)
-    C1 & C2 & C3 & C4 & C5 -->|"1. HTTPS"| GW
+    %% Conexiones Síncronas (REST / gRPC)
+    C1 -->|"1. HTTPS"| GW
+    C2 -->|"1. HTTPS"| GW
+    C3 -->|"1. HTTPS"| GW
+    C4 -->|"1. HTTPS"| GW
+    C5 -->|"1. HTTPS"| GW
+    
     GW -->|"2. Route"| M_IAM
     M_BIOM -->|"3. Síncrono"| EXT_AUTH
     M_IAM -->|"4. Genera JWT"| BFF
@@ -108,9 +119,12 @@ graph TD
     BFF -->|"11. REST Sync"| S_CRM
     BFF -->|"12. REST Sync"| S_MONEY
     
-    S_CORE & S_RISK & S_PAY & S_CRM -->|"Orquestación Síncrona"| BPM
+    S_CORE -->|"Orquestación Síncrona"| BPM
+    S_RISK -->|"Orquestación Síncrona"| BPM
+    S_PAY -->|"Orquestación Síncrona"| BPM
+    S_CRM -->|"Orquestación Síncrona"| BPM
 
-    %% Flujos de Integración Asíncronos (Eventos / Kafka)
+    %% Conexiones Asíncronas (Eventos / Kafka)
     BPM -.->|"13. Publicar Eventos"| EVB
     S_CORE -.->|"14. Publicar Eventos"| EVB
     S_PAY -.->|"15. Webhook Callback Event"| EVB
@@ -121,8 +135,10 @@ graph TD
     EVB -->|"19. Trigger Alert"| NOTIF
     NOTIF -->|"20. Push Alert"| EXT_NOT
     
-    %% Observabilidad
-    BFF & CapaServicios & BPM -.->|"Logs / Métricas"| OBS
+    %% Observabilidad consolidada
+    BFF -.-> OBS
+    BPM -.-> OBS
+    EVB -.-> OBS
 ```
 
 ---
