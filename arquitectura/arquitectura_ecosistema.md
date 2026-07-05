@@ -15,7 +15,7 @@ Este documento presenta el diseño de la **Arquitectura de Referencia de Alto Ni
 ## 🗺️ 1. Diagrama de Arquitectura Conceptual
 
 ### Vista Conceptual de Alto Nivel
-![Arquitectura de Alto Nivel](architecture_hld_banner.svg)
+![Arquitectura de Alto Nivel](arquitectura_ecosistema.drawio.png)
 
 ### Flujo Lógico de Integraciones (Mermaid)
 El siguiente modelo conceptual muestra el desacoplamiento de capas y flujos de integración:
