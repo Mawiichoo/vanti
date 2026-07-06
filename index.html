@@ -20,11 +20,20 @@
     <div class="app-container">
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
-            <div class="logo-container">
-                <div class="vanti-logo">
-                    vanti<span>.</span>
+            <div class="logo-container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div>
+                    <div class="vanti-logo">
+                        vanti<span>.</span>
+                    </div>
+                    <div class="logo-tagline">Más formas de avanzar</div>
                 </div>
-                <div class="logo-tagline">Más formas de avanzar</div>
+                <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú" style="display: none; background: none; border: none; color: var(--text-main); cursor: pointer; padding: 5px;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
             </div>
             
             <nav class="sidebar-nav">
@@ -145,7 +154,10 @@
                 <section class="panel project-panel">
                     <div class="panel-header">
                         <h2 class="panel-title">4.1 Visibilidad de Avance (Proyectos, Épicas e HUs con Fechas)</h2>
-                        <div style="display: flex; gap: 0.5rem;">
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="btn btn-sm btn-outline" id="btn-add-project" style="border-color: var(--vanti-yellow); color: var(--vanti-yellow);">
+                                + Agregar Proyecto
+                            </button>
                             <button class="btn btn-sm btn-outline" id="btn-add-epic">
                                 + Agregar Épica
                             </button>
@@ -392,12 +404,15 @@
     <div class="modal" id="project-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Editar Configuración de Proyecto</h3>
+                <h3 id="project-modal-title">Editar Configuración de Proyecto</h3>
                 <button class="close-btn" id="btn-close-project-modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="project-form">
-                    <input type="hidden" id="form-project-id-edit">
+                    <div class="form-group" id="form-project-id-group" style="display: none;">
+                        <label for="form-project-id-edit">Código Único del Proyecto (Ej: PAGO, TEST)</label>
+                        <input type="text" id="form-project-id-edit" placeholder="Código de 4 letras">
+                    </div>
                     <div class="form-group">
                         <label for="form-project-name-edit">Nombre del Proyecto</label>
                         <input type="text" id="form-project-name-edit" required>
@@ -405,6 +420,12 @@
                     <div class="form-group">
                         <label for="form-project-desc-edit">Descripción</label>
                         <input type="text" id="form-project-desc-edit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-project-dependency">Proyecto Predecesor (Dependencia)</label>
+                        <select id="form-project-dependency">
+                            <!-- Dynamically filled by app.js -->
+                        </select>
                     </div>
                     <div class="form-row">
                         <div class="form-group col">
@@ -428,7 +449,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" id="btn-cancel-project-modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        <button type="submit" class="btn btn-primary" id="btn-save-project">Guardar Cambios</button>
                     </div>
                 </form>
             </div>

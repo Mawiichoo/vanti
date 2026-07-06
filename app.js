@@ -555,9 +555,40 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Setup event handling
 function setupEventListeners() {
-    document.getElementById("nav-dashboard").addEventListener("click", () => switchTab("dashboard"));
-    document.getElementById("nav-simulator").addEventListener("click", () => switchTab("simulator"));
-    document.getElementById("nav-data-manager").addEventListener("click", () => switchTab("data-manager"));
+    const menuToggle = document.getElementById("menu-toggle");
+    const sidebar = document.querySelector(".sidebar");
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener("click", () => {
+            sidebar.classList.toggle("active");
+        });
+    }
+
+    const closeSidebarOnMobile = () => {
+        if (window.innerWidth <= 950 && sidebar) {
+            sidebar.classList.remove("active");
+        }
+    };
+
+    if (sidebar) {
+        sidebar.addEventListener("click", (e) => {
+            if (window.innerWidth <= 950 && (e.target.closest("li") || e.target.closest("button:not(#menu-toggle)"))) {
+                closeSidebarOnMobile();
+            }
+        });
+    }
+
+    document.getElementById("nav-dashboard").addEventListener("click", () => {
+        switchTab("dashboard");
+        closeSidebarOnMobile();
+    });
+    document.getElementById("nav-simulator").addEventListener("click", () => {
+        switchTab("simulator");
+        closeSidebarOnMobile();
+    });
+    document.getElementById("nav-data-manager").addEventListener("click", () => {
+        switchTab("data-manager");
+        closeSidebarOnMobile();
+    });
 
     const sliderCapacity = document.getElementById("sim-capacity");
     const sliderVal = document.getElementById("sim-capacity-val");
@@ -636,6 +667,7 @@ function setupEventListeners() {
     });
 
     // Modal triggers & handlers
+    document.getElementById("btn-add-project").addEventListener("click", () => openProjectModal());
     document.getElementById("btn-add-hu").addEventListener("click", () => openHUModal());
     document.getElementById("btn-add-epic").addEventListener("click", () => openEpicModal());
 
@@ -914,10 +946,10 @@ function runCalculationsAndRender() {
         const aStarts = projHUs.map(h => new Date(h.actualStartDate).getTime());
         const aEnds = projHUs.map(h => new Date(h.actualEndDate).getTime());
         
-        const plannedStart = proj.plannedStartDate || formatDateISO(new Date(Math.min(...pStarts)));
-        const plannedEnd = proj.plannedEndDate || formatDateISO(new Date(Math.max(...pEnds)));
-        const actualStart = proj.actualStartDate || formatDateISO(new Date(Math.min(...aStarts)));
-        const actualEnd = proj.actualEndDate || formatDateISO(new Date(Math.max(...aEnds)));
+        const plannedStart = pStarts.length > 0 ? formatDateISO(new Date(Math.min(...pStarts))) : (proj.plannedStartDate || "");
+        const plannedEnd = pEnds.length > 0 ? formatDateISO(new Date(Math.max(...pEnds))) : (proj.plannedEndDate || "");
+        const actualStart = aStarts.length > 0 ? formatDateISO(new Date(Math.min(...aStarts))) : (proj.actualStartDate || "");
+        const actualEnd = aEnds.length > 0 ? formatDateISO(new Date(Math.max(...aEnds))) : (proj.actualEndDate || "");
         
         const slippageDays = Math.max(0, Math.ceil((new Date(actualEnd) - new Date(plannedEnd)) / (1000 * 60 * 60 * 24)));
 
@@ -1018,9 +1050,10 @@ function propagateCalendarTimelines(husList) {
         aEnd: new Date(h.actualEndDate)
     }));
 
-    for (let i = 0; i < husList.length; i++) {
+    for (let i = 0; i < husList.length * 2; i++) {
         let changed = false;
         for (let hu of computed) {
+            // 1. HU-level dependency
             if (hu.dependency) {
                 const dep = computed.find(h => h.id === hu.dependency);
                 if (dep) {
@@ -1035,6 +1068,33 @@ function propagateCalendarTimelines(husList) {
                     if (hu.aStart.getTime() < dep.aEnd.getTime()) {
                         const originalDuration = hu.aEnd.getTime() - hu.aStart.getTime();
                         hu.aStart.setTime(dep.aEnd.getTime());
+                        hu.aEnd.setTime(hu.aStart.getTime() + originalDuration);
+                        hu.actualStartDate = formatDateISO(hu.aStart);
+                        hu.actualEndDate = formatDateISO(hu.aEnd);
+                        changed = true;
+                    }
+                }
+            }
+
+            // 2. Project-level dependency
+            const proj = state.projects.find(p => p.id === hu.projectId);
+            if (proj && proj.dependency) {
+                const parentHUs = computed.filter(h => h.projectId === proj.dependency);
+                if (parentHUs.length > 0) {
+                    const maxPlannedEnd = Math.max(...parentHUs.map(h => h.pEnd.getTime()));
+                    const maxActualEnd = Math.max(...parentHUs.map(h => h.aEnd.getTime()));
+
+                    if (hu.pStart.getTime() < maxPlannedEnd) {
+                        const originalDuration = hu.pEnd.getTime() - hu.pStart.getTime();
+                        hu.pStart.setTime(maxPlannedEnd);
+                        hu.pEnd.setTime(hu.pStart.getTime() + originalDuration);
+                        hu.plannedStartDate = formatDateISO(hu.pStart);
+                        hu.plannedEndDate = formatDateISO(hu.pEnd);
+                        changed = true;
+                    }
+                    if (hu.aStart.getTime() < maxActualEnd) {
+                        const originalDuration = hu.aEnd.getTime() - hu.aStart.getTime();
+                        hu.aStart.setTime(maxActualEnd);
                         hu.aEnd.setTime(hu.aStart.getTime() + originalDuration);
                         hu.actualStartDate = formatDateISO(hu.aStart);
                         hu.actualEndDate = formatDateISO(hu.aEnd);
@@ -1068,7 +1128,8 @@ function renderAccordion(projects, epics, HUs) {
             <div class="project-summary-header" onclick="toggleProjectExpanded('${proj.id}')">
                 <div class="project-title-wrapper">
                     <span class="proj-title">${proj.name}</span>
-                    <span class="proj-code">${proj.code}</span>
+                    <span class="proj-code">${proj.code || proj.id}</span>
+                    ${proj.dependency ? `<span class="proj-dep-badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; margin-top: 4px; font-weight: 600; align-self: flex-start;">Dep: ${proj.dependency}</span>` : ""}
                 </div>
                 <div class="project-progress-wrapper">
                     <div class="proj-progress-label">
@@ -1842,19 +1903,51 @@ function updateBurndownChart() {
    PROJECT & EPIC EDIT TRIGGER & FORM SAVE HANDLERS
    ========================================================================== */
 
-function openProjectModal(projId) {
-    const proj = state.projects.find(p => p.id === projId);
-    if (!proj) return;
-
-    document.getElementById("form-project-id-edit").value = proj.id;
-    document.getElementById("form-project-name-edit").value = proj.name;
-    document.getElementById("form-project-desc-edit").value = proj.desc || "";
+function openProjectModal(projId = null) {
+    const idGroup = document.getElementById("form-project-id-group");
+    const titleEl = document.getElementById("project-modal-title");
+    const idInput = document.getElementById("form-project-id-edit");
+    const depSelect = document.getElementById("form-project-dependency");
     
-    // Set dates (fallbacks to default starts/ends if not configured)
-    document.getElementById("form-project-planned-start").value = proj.plannedStartDate || "2026-07-01";
-    document.getElementById("form-project-planned-end").value = proj.plannedEndDate || "2026-11-15";
-    document.getElementById("form-project-actual-start").value = proj.actualStartDate || "2026-07-01";
-    document.getElementById("form-project-actual-end").value = proj.actualEndDate || "2026-11-20";
+    // Fill dependencies dropdown
+    const availableProjects = state.projects.filter(p => !projId || p.id !== projId);
+    depSelect.innerHTML = `<option value="">(Ninguno)</option>` + 
+        availableProjects.map(p => `<option value="${p.id}">${p.name} (${p.id})</option>`).join("");
+
+    if (projId) {
+        // EDIT MODE
+        const proj = state.projects.find(p => p.id === projId);
+        if (!proj) return;
+
+        titleEl.textContent = "Editar Configuración de Proyecto";
+        idGroup.style.display = "none";
+        idInput.value = proj.id;
+        idInput.removeAttribute("required");
+
+        document.getElementById("form-project-name-edit").value = proj.name;
+        document.getElementById("form-project-desc-edit").value = proj.desc || "";
+        depSelect.value = proj.dependency || "";
+        
+        document.getElementById("form-project-planned-start").value = proj.plannedStartDate || "2026-07-01";
+        document.getElementById("form-project-planned-end").value = proj.plannedEndDate || "2026-11-15";
+        document.getElementById("form-project-actual-start").value = proj.actualStartDate || "2026-07-01";
+        document.getElementById("form-project-actual-end").value = proj.actualEndDate || "2026-11-20";
+    } else {
+        // CREATE MODE
+        titleEl.textContent = "Agregar Nuevo Proyecto";
+        idGroup.style.display = "block";
+        idInput.value = "";
+        idInput.setAttribute("required", "true");
+
+        document.getElementById("form-project-name-edit").value = "";
+        document.getElementById("form-project-desc-edit").value = "";
+        depSelect.value = "";
+        
+        document.getElementById("form-project-planned-start").value = "2026-07-01";
+        document.getElementById("form-project-planned-end").value = "2026-11-15";
+        document.getElementById("form-project-actual-start").value = "2026-07-01";
+        document.getElementById("form-project-actual-end").value = "2026-11-20";
+    }
 
     document.getElementById("project-modal").classList.add("active");
 }
@@ -1865,21 +1958,54 @@ function closeProjectModal() {
 
 function saveProjectForm(e) {
     e.preventDefault();
-    const id = document.getElementById("form-project-id-edit").value;
-    const proj = state.projects.find(p => p.id === id);
-    
-    if (proj) {
-        proj.name = document.getElementById("form-project-name-edit").value;
-        proj.desc = document.getElementById("form-project-desc-edit").value;
-        proj.plannedStartDate = document.getElementById("form-project-planned-start").value;
-        proj.plannedEndDate = document.getElementById("form-project-planned-end").value;
-        proj.actualStartDate = document.getElementById("form-project-actual-start").value;
-        proj.actualEndDate = document.getElementById("form-project-actual-end").value;
-
-        saveData();
-        closeProjectModal();
-        runCalculationsAndRender();
+    const idInput = document.getElementById("form-project-id-edit").value.trim().toUpperCase();
+    if (!idInput) {
+        alert("El código del proyecto es obligatorio.");
+        return;
     }
+
+    let proj = state.projects.find(p => p.id === idInput);
+    const isCreate = !proj;
+
+    if (isCreate) {
+        // Check for duplicate ID
+        if (state.projects.some(p => p.id === idInput)) {
+            alert("Este código de proyecto ya existe.");
+            return;
+        }
+
+        proj = {
+            id: idInput,
+            code: idInput,
+            name: "",
+            desc: "",
+            progress: 0,
+            plannedCost: 0,
+            actualCost: 0,
+            plannedStartDate: "",
+            plannedEndDate: "",
+            actualStartDate: "",
+            actualEndDate: "",
+            dependency: "",
+            slippageDays: 0
+        };
+    }
+
+    proj.name = document.getElementById("form-project-name-edit").value;
+    proj.desc = document.getElementById("form-project-desc-edit").value;
+    proj.plannedStartDate = document.getElementById("form-project-planned-start").value;
+    proj.plannedEndDate = document.getElementById("form-project-planned-end").value;
+    proj.actualStartDate = document.getElementById("form-project-actual-start").value;
+    proj.actualEndDate = document.getElementById("form-project-actual-end").value;
+    proj.dependency = document.getElementById("form-project-dependency").value;
+
+    if (isCreate) {
+        state.projects.push(proj);
+    }
+
+    saveData();
+    closeProjectModal();
+    runCalculationsAndRender();
 }
 
 function openEpicModal(epicId = null) {
