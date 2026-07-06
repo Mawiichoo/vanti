@@ -6,6 +6,12 @@ Este documento presenta el diseño de la **Arquitectura de Referencia de Alto Ni
 > Puedes acceder al **Dashboard Interactivo en Vivo** para el control y simulación tridimensional del portafolio en el siguiente enlace:
 > **[Portal de Gobierno Vanti (Live Dashboard)](https://mawiichoo.github.io/vanti/)**
 
+### Agentes de Inteligencia Artificial (Gemas de Gemini)
+> Para la gobernanza estratégica, priorización cuantitativa y simulación de crisis del portafolio, se han configurado tres agentes especializados (Gemas) en Google Gemini, accesibles en los siguientes enlaces públicos:
+> 1. **[Gema 1: Priorización Global de Backlog (WSJF)](https://gemini.google.com/gem/1yqux4mXEU216lduwI_pflrRvhuoxcZ2m?usp=sharing)**
+> 2. **[Gema 2: Gobierno y Captura de Valor de Software](https://gemini.google.com/gem/1lnzmVWXVEJ9lW5A1FUdmxQyX-TJFndNA?usp=sharing)**
+> 3. **[Gema 3: Consultor de Capacidad y Mitigación MVP](https://gemini.google.com/gem/1kwyO8UHxKIRgWg5pUUbu9Y70BHYROV3_?usp=sharing)**
+
 ## 1. Diagrama de Arquitectura Conceptual
 
 ### Vista Conceptual de Alto Nivel
